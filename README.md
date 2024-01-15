@@ -19,6 +19,9 @@ Create a folder that contains all of your POO Objects (classes, interfaces, enum
     // Load all php POO files in "System" Folder
     Loader::Load(__DIR__ . '/System');
 
+Note : For standard use, partial file must have "partial_php" extension, but it's possible to use "php" extension if you specify "php_as_partial" attribute to "True" when "Load" method was called.
+But use "php" are more lazy because it necessary to load the php file before determine if the file is a partial file.
+
 ## Class creation
 To create a class with partials files, create a folder for your class, and create all of your files inside.
 
