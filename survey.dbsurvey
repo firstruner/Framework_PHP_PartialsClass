@@ -1,0 +1,12 @@
+<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <Hashage>
+    <Path>[:init:]</Path>
+    <Hash>XXXXX</Hash>
+    <ContactsAlert>localhost</ContactsAlert>
+  </Hashage>
+  <Options>
+    <OptionName>ignore</OptionName>
+    <OptionValue>false</OptionValue>
+  </Options>
+</NewDataSet>
