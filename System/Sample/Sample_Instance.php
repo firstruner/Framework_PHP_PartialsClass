@@ -23,21 +23,16 @@
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
  * @license   https://wikipedia.org/wiki/Freemium Freemium License
- * @version 1.0.1
+ * @version 1.1.0
  */
 
-namespace System\Printers;
+namespace System\Sample;
 
-use System\Attributes\
-{
-      Partial,
-      Partial_Content
-};
+use System\Attributes\Partial;
 
 #[Partial]
 class Sample
 {
-      #[Partial_Content]
       public function PrintInstanceMessage()
       {
             echo "Mon Instance";

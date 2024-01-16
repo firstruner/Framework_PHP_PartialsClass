@@ -23,7 +23,7 @@
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
  * @license   https://wikipedia.org/wiki/Freemium Freemium License
- * @version 1.0.1
+ * @version 1.1.0
  */
 
 header("Content-Type: text/plain");
@@ -35,15 +35,15 @@ require __DIR__ . '/System/Reflection/Dependencies/Loader.php';
 use System\Reflection\Dependencies\Loader;
 
 // Load all php POO files in "System" folder
-Loader::Load(__DIR__ . '/System', php_as_partial:true);
+Loader::Load(__DIR__ . '/System', php_as_partial: true);
 
 // Consume partial class
 echo '--- Use Class ---' . PHP_EOL;
 
 // Consume an instance class object
-$obj = new System\Printers\Sample();
+$obj = new System\Sample\Sample();
 $obj->PrintInstanceMessage();
 
 // Consume a static method in same class object
 echo PHP_EOL;
-System\Printers\Sample::PrintStaticMessage();
+System\Sample\Sample::PrintStaticMessage();

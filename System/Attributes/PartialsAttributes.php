@@ -23,7 +23,7 @@
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
  * @license   https://wikipedia.org/wiki/Freemium Freemium License
- * @version 1.0.1
+ * @version 1.1.0
  */
 
 namespace System\Attributes;
@@ -31,15 +31,8 @@ namespace System\Attributes;
 use Attribute;
 
 define("Partial_Attribute", "#[Partial]");
-define("Partial_Content", "#[Partial_Content]");
-define("PHP_FileTag", "<?php");
 
 #[Attribute(Attribute::TARGET_CLASS)]
 final class Partial
-{
-}
-
-#[Attribute(Attribute::TARGET_ALL)]
-final class Partial_Content
 {
 }
