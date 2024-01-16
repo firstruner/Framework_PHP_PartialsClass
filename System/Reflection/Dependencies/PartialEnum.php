@@ -28,11 +28,11 @@
 
 namespace System\Reflection\Dependencies;
 
-abstract class PartialConst
+abstract class PartialEnum
 {
-      const Tag_Namespace = "namespace ";
-      const Tag_Class = "class ";
-      const Tag_Interfaces = "implements ";
-      const Tag_Extends = "extends ";
-      const Tag_Use = "use ";
+      public const _Namespace = 1;
+      public const _Uses = 2;
+      public const _Class = 4;
+      public const _Extends = 8;
+      public const _Implements = 16;
 }

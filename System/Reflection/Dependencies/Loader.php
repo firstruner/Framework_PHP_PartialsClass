@@ -23,13 +23,14 @@
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
  * @license   https://wikipedia.org/wiki/Freemium Freemium License
- * @version 1.1.0
+ * @version 1.2.0
  */
 
 namespace System\Reflection\Dependencies;
 
 require __DIR__ . "/../../Attributes/PartialsAttributes.php";
 require __DIR__ . "/PartialConst.php";
+require __DIR__ . "/PartialEnum.php";
 require __DIR__ . "/PartialElements.php";
 
 final class Loader
@@ -44,8 +45,6 @@ final class Loader
       private const PhpExtension = "php";
       private const PhpPartialExtension = "partial_php";
       private const PartialFileHeading = "// --- File : ";
-      private const ExceptionLoadPartialMessage = "Error when loading partials class file : ";
-      private const UsePartial = "use System\Attributes\Partial;";
 
       public static function Load(string $path, int $maxTemptatives = 1, $php_as_partial = false)
       {
@@ -84,12 +83,37 @@ final class Loader
                   || (str_replace("/", "\\", $fullPath) == __FILE__));
       }
 
+      private static function getContentIfPHPFile($path) : string
+      {
+            return Loader::$php_as_partial
+                  ? file_get_contents($path)
+                  : "";
+      }
+
+      private static function addToCollection(
+            PartialElementsCollection &$collection,
+            string $content, string $filename) : bool
+      {
+            if (strpos($content, Partial_Attribute) > 0) {
+                  $collection->add(
+                        new PartialElements(
+                              $content,
+                              Loader::PartialFileHeading . $filename . " ---"
+                        )
+                  );
+
+                  return true;
+            }
+
+            return false;
+      }
+
       private static function loadDependenciesFromPath(string $path): array
       {
             $dependants = array();
 
-            $partialContents = array();
-
+            $partialsCollection = new PartialElementsCollection();
+            
             foreach (scandir($path) as $filename) {
                   $currentPath = $path . '/' . $filename;
 
@@ -98,115 +122,46 @@ final class Loader
 
                   if (is_file($currentPath)) {
                         $ext = pathinfo($currentPath, PATHINFO_EXTENSION);
+                        $preload = "";
 
                         switch ($ext) {
                               case Loader::PhpExtension:
-                                    $preload = Loader::$php_as_partial
-                                          ? file_get_contents($currentPath)
-                                          : "";
-
-                                    if (strpos($preload, Partial_Attribute) > 0) {
-                                          array_push(
-                                                $partialContents,
-                                                new PartialElements(
-                                                      $preload,
-                                                      Loader::PartialFileHeading . $filename . " ---"
-                                                )
-                                          );
-                                    } else {
-                                          try {
-                                                require_once $currentPath;
-                                                Loader::$Counter++;
-                                          } catch (\Error $e) {
-                                                array_push($dependants, $currentPath);
-                                          }
-                                    }
-                                    break;
+                                    $preload = Loader::getContentIfPHPFile($currentPath);
                               case Loader::PhpPartialExtension:
-                                    array_push(
-                                          $partialContents,
-                                          new PartialElements(
-                                                file_get_contents($currentPath),
-                                                Loader::PartialFileHeading . $filename . " ---"
-                                          )
-                                    );
+                                    if (!Loader::addToCollection(
+                                          $partialsCollection,
+                                          strlen($preload) > 0 ? $preload : file_get_contents($currentPath),
+                                          $filename
+                                    ))
+                                          if (Loader::standardPHPFileLoader($currentPath))
+                                                Loader::$Counter++;
                                     break;
                         }
                   }
-
-                  if (is_dir($currentPath))
-                        $dependants = array_merge($dependants, Loader::loadDependenciesFromPath($currentPath));
+                  else if (is_dir($currentPath))
+                  {
+                        $dependants = array_merge(
+                              $dependants,
+                              Loader::loadDependenciesFromPath($currentPath));
+                  }
             }
 
-            if (count($partialContents) > 0)
-                  Loader::CompilePartials($partialContents);
+            if ($partialsCollection->count() > 0)
+            {
+                  if ($partialsCollection->CompilePartials())
+                        Loader::$Counter++;
+            }
 
             return $dependants;
       }
 
-      private static function CompilePartials(array $partialContents)
+      private static function standardPHPFileLoader($path) : bool
       {
-            $Namespace = PartialConst::Tag_Namespace . $partialContents[0]->Namespace . ';' . PHP_EOL;
-            $ClassName = PartialConst::Tag_Class . $partialContents[0]->ClassName . PHP_EOL;
-
-            $Uses = "";
-            $Extends = "";
-            $Implements = "";
-            $Contents = "";
-
-            foreach ($partialContents as $partial) {
-                  $Uses .= $partial->Tag_File . PHP_EOL . $partial->Uses . PHP_EOL;
-                  $Extends .= (
-                        (strlen($partial->Inherits) > 0)
-                        ? (strlen($Extends) == 0
-                              ?     $partial->Tag_File . PHP_EOL .
-                              PartialConst::Tag_Extends . PHP_EOL .
-                              $partial->Inherits
-                              : "")
-                        : "");
-                  $Implements .=
-                        (strlen($partial->Interfaces) > 0
-                              ? (strlen($Implements) > 0
-                                    ? ", "
-                                    : PartialConst::Tag_Interfaces . PHP_EOL) .
-                              $partial->Tag_File . PHP_EOL .
-                              $partial->Interfaces . PHP_EOL
-                              : "");
-                  $Contents .= $partial->Tag_File . PHP_EOL . $partial->Content . PHP_EOL;
-            }
-
-            $Uses = str_replace(Loader::UsePartial, "", $Uses);
-
-            Loader::AssemblyAndEvaluate(
-                  $Namespace,
-                  $Uses,
-                  $ClassName,
-                  $Extends,
-                  $Implements,
-                  $Contents
-            );
-      }
-
-      private static function AssemblyAndEvaluate(
-            $Namespace,
-            $Uses,
-            $ClassName,
-            $Extends,
-            $Implements,
-            $Contents
-      ) {
-            $finalClass =
-                  $Namespace . PHP_EOL .
-                  $Uses . PHP_EOL .
-                  $ClassName . " " . $Extends . " " . $Implements . PHP_EOL .
-                  "{" . PHP_EOL . $Contents . PHP_EOL . "}";
-
             try {
-                  eval($finalClass);
-                  Loader::$Counter++;
+                  require_once $path;
+                  return true;
             } catch (\Error $e) {
-                  echo new \Exception(Loader::ExceptionLoadPartialMessage .
-                        $e->getMessage());
+                  array_push($dependants, $path);
             }
       }
 
