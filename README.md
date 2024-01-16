@@ -112,3 +112,5 @@ Since the 1.1.* version, you can specify independently inheritance and implement
     {
     }
 
+## Features
+"final" and "abstract" are present in the next version : 1.2 !
