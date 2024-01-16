@@ -1,4 +1,3 @@
-
 # Framework PHP - Partials functions
 Part of Firstruner Framework for PHP to allow use Partial function with PHP class
 
@@ -25,67 +24,91 @@ But use "php" are more lazy because it necessary to load the php file before det
 ## Class creation
 To create a class with partials files, create a folder for your class, and create all of your files inside.
 
-### Define main partial class
+### Define a class as partial
 #### Call attributes
 Define the file that is the main class file and call Partials attributes like this :
 
-    use System\Attributes\
-    {
-          Partial,
-          Partial_Content
-    };
+    use System\Attributes\Partial;
 
 #### Define the partial class
 Now define the class as main partial class with using Partial attribute like this
 
     #[Partial]
 
-#### Define the contents place
-And specify when other partial files are include in your file, like this :
-
-    #[Partial_Content]
-          public function PrintInstanceMessage() {}
-
 #### Full main partial class sample
 
     <?php
     namespace System\Printers;
     
-    use System\Attributes\
-    {
-          Partial,
-          Partial_Content
-    };
+    use System\Attributes\Partial;
     
     #[Partial]
     class ScreenPrinter
     {
-          #[Partial_Content]
           public function PrintInstanceMessage()
           {
                 echo "Mon Instance";
           }
     }
 
-### Define a partial class file
-In all other partial file, you just need specify that a partial content like this :
+## Uses, inheritance and implementations
+Since the 1.1.* version, you can specify independently inheritance and implementation by file
 
-    #[Partial_Content]
-    public static function PrintStaticMessage() {}
+### Sample 1
+##### File 1
 
-#### Full partial content class sample
-
-    <?php
-    namespace System\Printers;
+    namespace  System\Sample;
     
-    use System\Attributes\Partial_Content;
+    use System\Attributes\Partial;
+    use \Exception;
     
-    class ScreenPrinter
+    #[Partial]
+    class  Sample extends MainClass
     {
-          #[Partial_Content]
-          public static function PrintStaticMessage()
-          {
-                echo "Static message";
-          }
+    }
+
+##### File 
+
+    namespace  System\Sample;
+    
+    use System\Attributes\Partial;
+    use Symfony\Component\
+    {
+    	HttpFoundation\Request,
+    	Routing\Annotation\Route
+    };
+    
+    #[Partial]
+    class  Sample implements OwnInterface
+    {
+    }
+
+### Sample 2
+##### File 1
+
+    namespace  System\Sample;
+    
+    use System\Attributes\Partial;
+    use \Exception;
+    
+    #[Partial]
+    class  Sample extends MainClass implements 1stInterface, 2ndInterface
+    {
+    }
+
+##### File 
+
+    namespace  System\Sample;
+    
+    use System\Attributes\Partial;
+    use Symfony\Component\
+    {
+    	HttpFoundation\Request,
+    	Routing\Annotation\Route
+    };
+    
+    #[Partial]
+    class  Sample implements OwnInterface, OtherInterface
+    {
     }
 
