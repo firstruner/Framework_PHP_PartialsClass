@@ -32,7 +32,7 @@ require __DIR__ . "/../../Attributes/PartialsAttributes.php";
 require __DIR__ . "/PartialConst.php";
 require __DIR__ . "/PartialElements.php";
 
-class Loader
+final class Loader
 {
       private static array $dependants = array();
       private static array $dependants_Loaded = array();
