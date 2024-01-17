@@ -26,15 +26,15 @@
  * @version 1.2.0
  */
 
-namespace System\Sample;
+namespace System\Samples;
 
 use System\Attributes\Partial;
 
 #[Partial]
-abstract class Sample
+class Simple
 {
-      public function PrintInstanceMessage()
+      public static function PrintStaticMessage()
       {
-            echo "Mon Instance";
+            echo "Static message";
       }
 }

@@ -26,15 +26,14 @@
  * @version 1.2.0
  */
 
-namespace System\Sample;
+namespace System\Samples;
 
 use System\Attributes\Partial;
 
 #[Partial]
-final class Sample
+class ExtendedClass
 {
-      public static function PrintStaticMessage()
-      {
-            echo "Static message";
-      }
+      public int $id;
+      public string $firstname;
+      public string $lastname;
 }
