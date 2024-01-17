@@ -23,13 +23,14 @@
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
  * @license   https://wikipedia.org/wiki/Freemium Freemium License
- * @version 1.2.0
+ * @version 2.0.0
  */
 
 namespace System\Reflection\Dependencies;
 
 use Exception;
 use Iterator;
+use System\Environment\PHP;
 
 final class PartialElementsCollection implements Iterator
 {
@@ -102,40 +103,74 @@ final class PartialElementsCollection implements Iterator
                   $incorpoElement;
       }
 
-      private function isAbstractClass() : bool
+      private function isAbstractClass(): bool
       {
             foreach ($this->elements as $elem)
                   if ($elem->isAbstract) return true;
-            
+
             return false;
       }
 
-      private function isFinalClass() : bool
+      private function isFinalClass(): bool
       {
             foreach ($this->elements as $elem)
                   if ($elem->isFinal) return true;
-            
+
             return false;
       }
 
-      private function FinalAbstractRulesValids() : bool
+      private function FinalAbstractRulesValids(): bool
       {
-            if ($this->elements[0]->getObjectType() == PartialEnumerations_ObjectType::_Class)
-            {
+            if ($this->elements[0]->getObjectType() == PartialEnumerations_ObjectType::_Class) {
                   if ($this->isAbstractClass() && $this->isFinalClass())
                         throw new Exception(
-                              PartialMessages::ExceptionOnFinalAndAbstractClass . 
-                              " on " . $this->elements[0]->ElementName);
-            }
-            else
-            {
+                              PartialMessages::ExceptionOnFinalAndAbstractClass .
+                                    " on " . $this->elements[0]->ElementName
+                        );
+            } else {
                   if ($this->isAbstractClass() || $this->isFinalClass())
                         throw new Exception(
-                              PartialMessages::ExceptionOnFinalOrAbstractObject . 
-                              " on " . $this->elements[0]->ElementName);
+                              PartialMessages::ExceptionOnFinalOrAbstractObject .
+                                    " on " . $this->elements[0]->ElementName
+                        );
             }
 
             return true;
+      }
+
+      private function isOldPHPVersion() : bool
+      {
+            return (PHP::getCurrentVersion()["Major"] < 8)
+                  || ((PHP::getCurrentVersion()["Major"] == 8)
+                        && (PHP::getCurrentVersion()["Minor"] < 1));
+      }
+
+      private function EnumClassHeaderAdapter(string $elementName) : string
+      {
+            preg_replace('/\s\s+/', ' ', $elementName);
+
+            if ($this->isOldPHPVersion()
+                  && ($this->elements[0]->objectType == PartialEnumerations_ObjectType::_Enumeration))
+                        return str_replace(
+                              PartialConstants::Tag_Enum,
+                              PartialConstants::Tag_AbstractClass,
+                              $elementName);
+            
+            return $elementName;
+      }
+
+      private function EnumClassContentAdapter(string $content) : string
+      {
+            preg_replace('/\s\s+/', ' ', $content);
+
+            if ($this->isOldPHPVersion()
+                  && ($this->elements[0]->objectType == PartialEnumerations_ObjectType::_Enumeration))
+                        return str_replace(
+                              PartialConstants::Tag_EnumCaseTag,
+                              PartialConstants::Tag_AbstractClassConstTag,
+                              $content);
+            
+            return $content;
       }
 
       public function CompilePartials(): bool
@@ -143,11 +178,11 @@ final class PartialElementsCollection implements Iterator
             $this->FinalAbstractRulesValids();
 
             $Namespace = PartialConstants::Tag_Namespace . $this->elements[0]->Namespace . ';' . PHP_EOL;
-            $ClassName =
+            $ElementName =
                   ($this->isFinalClass() ? "final " : "") .
                   ($this->isAbstractClass() ? "abstract " : "") .
                   $this->elements[0]->getHeaderTag() . $this->elements[0]->ElementName . PHP_EOL;
-
+            
             $Uses = "";
             $Extends = "";
             $Implements = "";
@@ -162,10 +197,14 @@ final class PartialElementsCollection implements Iterator
 
             $Uses = str_replace(PartialElementsCollection::UsePartial, "", $Uses);
 
+            // Managing php < 8.1
+            $ElementName = $this->EnumClassHeaderAdapter($ElementName);
+            $Contents = $this->EnumClassContentAdapter($Contents);
+
             return $this->AssemblyAndEvaluate(
                   $Namespace,
                   $Uses,
-                  $ClassName,
+                  $ElementName,
                   $Extends,
                   $Implements,
                   $Contents
@@ -175,7 +214,7 @@ final class PartialElementsCollection implements Iterator
       private function AssemblyAndEvaluate(
             $Namespace,
             $Uses,
-            $ClassName,
+            $ElementName,
             $Extends,
             $Implements,
             $Contents
@@ -183,7 +222,7 @@ final class PartialElementsCollection implements Iterator
             $finalClass =
                   $Namespace . PHP_EOL .
                   $Uses . PHP_EOL .
-                  $ClassName . " " . $Extends . " " . $Implements . PHP_EOL .
+                  $ElementName . " " . $Extends . " " . $Implements . PHP_EOL .
                   "{" . PHP_EOL . $Contents . PHP_EOL . "}";
 
             try {
@@ -192,8 +231,9 @@ final class PartialElementsCollection implements Iterator
             } catch (\Error $e) {
                   echo new \Exception(
                         PartialMessages::ExceptionOnLoading .
-                        " on " . $ClassName . " - " .
-                        $e->getMessage());
+                              " on " . $ElementName . " - " .
+                              $e->getMessage()
+                  );
             }
 
             return false;

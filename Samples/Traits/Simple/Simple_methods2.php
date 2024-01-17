@@ -23,7 +23,7 @@
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
  * @license   https://wikipedia.org/wiki/Freemium Freemium License
- * @version 1.2.0
+ * @version 2.0.0
  */
 
 namespace Samples\Traits;
@@ -33,7 +33,7 @@ use System\Attributes\Partial;
 #[Partial]
 trait Simple
 {
-      function PrintInstanceMessage() {
-            
+      function PrintInstanceMessage()
+      {
       }
 }

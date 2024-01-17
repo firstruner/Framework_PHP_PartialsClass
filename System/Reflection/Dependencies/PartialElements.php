@@ -23,7 +23,7 @@
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
  * @license   https://wikipedia.org/wiki/Freemium Freemium License
- * @version 1.2.0
+ * @version 2.0.0
  */
 
 namespace System\Reflection\Dependencies;
@@ -65,7 +65,7 @@ final class PartialElements
             );
       }
 
-      public function getObjectType() : int
+      public function getObjectType(): int
       {
             return $this->objectType;
       }
@@ -98,29 +98,32 @@ final class PartialElements
       {
             if (preg_match(
                   $this::class_Pattern,
-                  $this->header) > 0)
+                  $this->header
+            ) > 0)
                   $this->objectType = PartialEnumerations_ObjectType::_Class;
 
             if (preg_match(
                   $this::interface_Pattern,
-                  $this->header) > 0)
+                  $this->header
+            ) > 0)
                   $this->objectType = PartialEnumerations_ObjectType::_Interface;
 
             if (preg_match(
                   $this::trait_Pattern,
-                  $this->header) > 0)
+                  $this->header
+            ) > 0)
                   $this->objectType = PartialEnumerations_ObjectType::_Trait;
 
             if (preg_match(
                   $this::enum_Pattern,
-                  $this->header) > 0)
+                  $this->header
+            ) > 0)
                   $this->objectType = PartialEnumerations_ObjectType::_Enumeration;
       }
 
-      private function getElementPattern() : string
+      private function getElementPattern(): string
       {
-            switch ($this->objectType)
-            {
+            switch ($this->objectType) {
                   case PartialEnumerations_ObjectType::_Class;
                         return $this::class_Pattern;
                   case PartialEnumerations_ObjectType::_Interface;
@@ -130,14 +133,13 @@ final class PartialElements
                   case PartialEnumerations_ObjectType::_Enumeration;
                         return $this::enum_Pattern;
                   default:
-                        return $this::empty_Pattern;                  
+                        return $this::empty_Pattern;
             }
       }
 
-      public function getHeaderTag() : string
+      public function getHeaderTag(): string
       {
-            switch ($this->objectType)
-            {
+            switch ($this->objectType) {
                   case PartialEnumerations_ObjectType::_Class;
                         return PartialConstants::Tag_Class;
                   case PartialEnumerations_ObjectType::_Interface;
@@ -147,22 +149,22 @@ final class PartialElements
                   case PartialEnumerations_ObjectType::_Enumeration;
                         return PartialConstants::Tag_Enum;
                   default:
-                        return "";                  
+                        return "";
             }
       }
 
-      private function getElementName(string $headers) : string
+      private function getElementName(string $headers): string
       {
             preg_match(
                   $this->getElementPattern(),
                   $this->header,
-                  $class_match);
+                  $class_match
+            );
 
-            if (count($class_match) > 0)
-            {
+            if (count($class_match) > 0) {
                   $this->isAbstract |= (strpos($headers, 'abstract ' . $class_match[0]) > 0);
                   $this->isFinal |= (strpos($headers, 'final ' . $class_match[0]) > 0);
-                  
+
                   return str_replace($this->getHeaderTag(), "", $class_match[0]);
             }
 
@@ -196,9 +198,11 @@ final class PartialElements
 
       private function detectClassHeaders(string $headers)
       {
-            $this->header = substr($headers,
-                  strpos($headers, PartialConstants::Partial_Attribute));
-            
+            $this->header = substr(
+                  $headers,
+                  strpos($headers, PartialConstants::Partial_Attribute)
+            );
+
             $this->setElementType();
 
             $this->Namespace = $this->getNamespace($headers);

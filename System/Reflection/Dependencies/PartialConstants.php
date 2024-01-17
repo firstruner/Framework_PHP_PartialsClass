@@ -23,7 +23,7 @@
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
  * @license   https://wikipedia.org/wiki/Freemium Freemium License
- * @version 1.2.0
+ * @version 2.0.0
  */
 
 namespace System\Reflection\Dependencies;
@@ -33,6 +33,9 @@ abstract class PartialConstants
       const Tag_Namespace = "namespace ";
       const Tag_Class = "class ";
       const Tag_Enum = "enum ";
+      const Tag_EnumCaseTag = "case ";
+      const Tag_AbstractClass = "abstract class ";
+      const Tag_AbstractClassConstTag = "const ";
       const Tag_Trait = "trait ";
       const Tag_Interface = "interface ";
       const Tag_Implements = "implements ";

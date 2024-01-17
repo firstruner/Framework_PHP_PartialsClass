@@ -23,12 +23,13 @@
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
  * @license   https://wikipedia.org/wiki/Freemium Freemium License
- * @version 1.2.0
+ * @version 2.0.0
  */
 
 namespace System\Reflection\Dependencies;
 
 require __DIR__ . "/../../Attributes/PartialsAttributes.php";
+require __DIR__ . "/../../Environment/PHP.php";
 require __DIR__ . "/PartialConstants.php";
 require __DIR__ . "/PartialEnumerations_Element.php";
 require __DIR__ . "/PartialEnumerations_ObjectType.php";
@@ -151,8 +152,7 @@ final class Loader
                         Loader::StandardPHP_LoadDependency(Loader::$dependants[$index]);
 
                         array_push(Loader::$dependants_Loaded, $index);
-                  }
-                  catch (\Error $e) {
+                  } catch (\Error $e) {
                   }
             }
       }
@@ -187,7 +187,8 @@ final class Loader
       {
             if (!in_array(
                   str_replace('/', '\\', $path),
-                  get_included_files()))
+                  get_included_files()
+            ))
                   require $path;
       }
 }

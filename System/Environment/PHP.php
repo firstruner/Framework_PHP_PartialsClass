@@ -1,10 +1,6 @@
 <?php
 
 /**
- * This file is a partial class sample
- */
-
-/**
  * Copyright since 2024 Firstruner and Contributors
  * Firstruner is an Registered Trademark & Property of Christophe BOULAS
  *
@@ -26,14 +22,16 @@
  * @version 2.0.0
  */
 
-namespace Samples\Class;
+namespace System\Environment;
 
-use System\Attributes\Partial;
-
-#[Partial]
-class ImplementedClass implements InterfaceSample
+class PHP
 {
-      public function testInterface()
+      public static function getCurrentVersion(): array
       {
+            return array(
+                  "Major" => PHP_MAJOR_VERSION,
+                  "Minor" => PHP_MINOR_VERSION,
+                  "Patch" => PHP_EXTRA_VERSION
+            );
       }
 }
