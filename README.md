@@ -1,5 +1,5 @@
 # 🛠️ Framework PHP - Partials functions
-Part of Firstruner Framework for PHP to allow use Partial function with PHP class
+Part of Firstruner Framework for PHP to allow use Partial function with PHP OOP objects
 
 This project is a part of 🛠️ Firstruner Framework for PHP.
 It contains a little part of the original Framework that allow you to use "partial" DotNet functionality into PHP structure project and also naturally the Framework loader.
@@ -67,6 +67,8 @@ Now define the OOP file as partial with using Partial attribute like this :
                 echo "Mon Instance";
           }
     }
+
+### 🔎 Some samples are present in Samples folder
 
 ### 📚 Sample 1
 ##### 📗 File 1
