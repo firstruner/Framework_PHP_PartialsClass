@@ -41,8 +41,8 @@ final class PartialElements
       public bool $isAbstract = false;
       public bool $isFinal = false;
 
-      private int $objectType = 0;
-      private string $header = "";
+      private int $objectType;
+      private string $header;
 
       private const class_Pattern = "/\bclass\s+([a-zA-Z0-9_-])+/";
       private const interface_Pattern = "/\binterface\s+([a-zA-Z0-9_-])+/";
@@ -52,6 +52,10 @@ final class PartialElements
 
       function __construct(string $content, string $tagFile)
       {
+            $this->Tag_File = $tagFile;
+            $this->objectType = PartialEnumerations_ObjectType::_Other;
+            $this->Content = $this->extractContents($content);
+
             $this->detectClassHeaders(
                   substr(
                         $content,
@@ -59,10 +63,6 @@ final class PartialElements
                         strpos($content, '{', strpos($content, PartialConstants::Partial_Attribute))
                   )
             );
-
-            $this->Tag_File = $tagFile;
-            $this->Content = $this->extractContents($content);
-            $this->objectType = PartialEnumerations_ObjectType::_Other;
       }
 
       public function getObjectType() : int
