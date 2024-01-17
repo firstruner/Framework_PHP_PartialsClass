@@ -6,8 +6,16 @@ It contains a little part of the original Framework that allow you to use "parti
 
 To use, it's very simple !
 
-## PHP version
-⚗️ Actually tested on PHP 8.2.4
+## ⚗️ PHP version
+Actually tested on PHP from 7.1.* to 8.3.*
+
+## Partials version
+🌞 v1.0 Initial repository
+🌞 v1.1 Uses, inheritance and implementations support
+🌞 v1.2 Final and Abstract support for classes
+💫 v2.0 🎇 Features :
+         - Interfaces, Enumerations and Trait support
+         - Conversion Enum files for PHP >= 8.1 to Abstract class files for PHP >= 7.1
 
 ## 🧙‍♂️ Loader
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
@@ -30,24 +38,21 @@ Create a folder that contains all of your POO Objects (classes, interfaces, enum
 👉 File extension note : For standard use, partial file must have "partial_php" extension, but it's possible to use "php" extension if you specify "php_as_partial" attribute to "True" when "Load" method was called.
 But use "php" are more lazy because it necessary to load the php file before determine if the file is a partial file.
 
-## Class creation
-To create a class with partials files, create a folder for your class, and create all of your files inside.
+## How use Partials
+To create a php files with partials, create a folder for your OOP object, and create all of your files inside.
 
-### Define a class as partial
+### Define a OOP file as partial
 #### Call attributes
-Define the file that is the main class file and call Partials attributes like this :
+To define the file as a partial file, you should reference Partials attributes like this :
 
     use System\Attributes\Partial;
 
-#### Define the partial class
-Now define the class as main partial class with using Partial attribute like this
+#### Define as partial file
+Now define the OOP file as partial with using Partial attribute like this :
 
     #[Partial]
 
-### Final and abstract classes
-🌞 Since the 1.2.* version, you can specify independently final or abstract by file
-
-#### 📚 Full main partial class sample
+#### 📚 Full main partial sample
 
     <?php
     namespace System\Printers;
@@ -63,9 +68,6 @@ Now define the class as main partial class with using Partial attribute like thi
           }
     }
 
-## Uses, inheritance and implementations
-🌞 Since the 1.1.* version, you can specify independently inheritance and implementation by file
-
 ### 📚 Sample 1
 ##### 📗 File 1
 
@@ -79,7 +81,7 @@ Now define the class as main partial class with using Partial attribute like thi
     {
     }
 
-##### 📘 File 
+##### 📘 File 2
 
     namespace  System\Sample;
     
@@ -108,7 +110,7 @@ Now define the class as main partial class with using Partial attribute like thi
     {
     }
 
-##### 📘 File 
+##### 📘 File 2
 
     namespace  System\Sample;
     
@@ -124,6 +126,3 @@ Now define the class as main partial class with using Partial attribute like thi
     {
     }
 
-## 🎇 Features
-💫 "final" and "abstract" are present in release version : 1.2 !
-💫 next version v2.0 support partial interfaces, enumerations and traits (lol)
