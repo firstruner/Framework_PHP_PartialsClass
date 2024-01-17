@@ -26,12 +26,13 @@
  * @version 1.2.0
  */
 
-namespace Samples\Interfaces;
+namespace Samples\Enum;
 
 use System\Attributes\Partial;
 
 #[Partial]
-interface Simple
+enum Simple
 {
-      function PrintStaticMessage();
+      case Hello;
+      case World;
 }

@@ -26,12 +26,14 @@
  * @version 1.2.0
  */
 
-namespace Samples\Interfaces;
+namespace Samples\Traits;
 
 use System\Attributes\Partial;
 
 #[Partial]
-interface Simple
+trait Simple
 {
-      function PrintStaticMessage();
+      function PrintStaticMessage() {
+            
+      }
 }

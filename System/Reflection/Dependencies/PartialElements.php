@@ -141,7 +141,7 @@ final class PartialElements
                   case PartialEnumerations_ObjectType::_Class;
                         return PartialConstants::Tag_Class;
                   case PartialEnumerations_ObjectType::_Interface;
-                        return PartialConstants::Tag_Implements;
+                        return PartialConstants::Tag_Interface;
                   case PartialEnumerations_ObjectType::_Trait;
                         return PartialConstants::Tag_Trait;
                   case PartialEnumerations_ObjectType::_Enumeration;

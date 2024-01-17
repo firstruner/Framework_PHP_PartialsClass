@@ -146,7 +146,7 @@ final class PartialElementsCollection implements Iterator
             $ClassName =
                   ($this->isFinalClass() ? "final " : "") .
                   ($this->isAbstractClass() ? "abstract " : "") .
-                  PartialConstants::Tag_Class . $this->elements[0]->ElementName . PHP_EOL;
+                  $this->elements[0]->getHeaderTag() . $this->elements[0]->ElementName . PHP_EOL;
 
             $Uses = "";
             $Extends = "";

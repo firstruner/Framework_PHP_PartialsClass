@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is a partial class sample
+ * This file is a partial interface sample
  */
 
 /**
