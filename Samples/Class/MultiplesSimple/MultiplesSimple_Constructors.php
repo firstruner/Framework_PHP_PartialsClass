@@ -10,7 +10,7 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Freemium License
+ * This source file is subject to the proprietary License
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to contact@firstruner.fr so we can send you a copy immediately.
@@ -22,7 +22,7 @@
  *
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
- * @license   https://wikipedia.org/wiki/Freemium Freemium License
+ * @license   https://wikipedia.org/wiki/proprietary proprietary License
  * @version 1.2.0
  */
 

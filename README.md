@@ -7,7 +7,7 @@ It contains a little part of the original Framework that allow you to use "parti
 To use, it's very simple !
 
 ## PHP version
-⚗️ Actually tested on PHP 8.2.4
+⚗️ Actually tested on PHP from 7.1.* to 8.3.*
 
 ## 🧙‍♂️ Loader
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
