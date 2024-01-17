@@ -2,7 +2,7 @@
     "name": "firstruner/partials",
     "description": "Allow to use partial files in php very simply",
     "type": "library",
-    "license": "Freemium",
+    "license": "proprietary",
     "authors": [
         {
             "name": "Firstruner",
