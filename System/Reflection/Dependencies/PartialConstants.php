@@ -28,7 +28,7 @@
 
 namespace System\Reflection\Dependencies;
 
-abstract class PartialConst
+abstract class PartialConstants
 {
       const Tag_Namespace = "namespace ";
       const Tag_Class = "class ";

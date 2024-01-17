@@ -38,27 +38,33 @@ final class PartialElementsCollection implements Iterator
       private int $position = 0;
       private array $elements = array();
 
-      public function __construct() {
+      public function __construct()
+      {
             $this->position = 0;
       }
 
-      public function rewind(): void {
+      public function rewind(): void
+      {
             $this->position = 0;
       }
 
-      public function current() {
+      public function current()
+      {
             return $this->elements[$this->position];
       }
 
-      public function key() {
+      public function key()
+      {
             return $this->position;
       }
 
-      public function next(): void {
+      public function next(): void
+      {
             ++$this->position;
       }
 
-      public function valid(): bool {
+      public function valid(): bool
+      {
             return isset($this->elements[$this->position]);
       }
 
@@ -67,12 +73,12 @@ final class PartialElementsCollection implements Iterator
             array_push($this->elements, $element);
       }
 
-      public function count() : int
+      public function count(): int
       {
             return count($this->elements);
       }
 
-      private function extendsCompiler(int $compileType, $currentContent, $partial) : string
+      private function extendsCompiler(int $compileType, $currentContent, $partial): string
       {
             $incorpoElement = "";
             $prefix = "";
@@ -80,11 +86,11 @@ final class PartialElementsCollection implements Iterator
             switch ($compileType) {
                   case PartialEnum::_Extends:
                         $incorpoElement = $partial->Extends;
-                        $prefix = (strlen($currentContent) > 0 ? ", " : PartialConst::Tag_Extends);
+                        $prefix = (strlen($currentContent) > 0 ? ", " : PartialConstants::Tag_Extends);
                         break;
                   case PartialEnum::_Implements:
                         $incorpoElement = $partial->Implements;
-                        $prefix = (strlen($currentContent) > 0 ? ", " : PartialConst::Tag_Interfaces);
+                        $prefix = (strlen($currentContent) > 0 ? ", " : PartialConstants::Tag_Interfaces);
                         break;
             }
 
@@ -96,10 +102,10 @@ final class PartialElementsCollection implements Iterator
                   $incorpoElement;
       }
 
-      public function CompilePartials() : bool
+      public function CompilePartials(): bool
       {
-            $Namespace = PartialConst::Tag_Namespace . $this->elements[0]->Namespace . ';' . PHP_EOL;
-            $ClassName = PartialConst::Tag_Class . $this->elements[0]->ClassName . PHP_EOL;
+            $Namespace = PartialConstants::Tag_Namespace . $this->elements[0]->Namespace . ';' . PHP_EOL;
+            $ClassName = PartialConstants::Tag_Class . $this->elements[0]->ClassName . PHP_EOL;
 
             $Uses = "";
             $Extends = "";
@@ -132,7 +138,7 @@ final class PartialElementsCollection implements Iterator
             $Extends,
             $Implements,
             $Contents
-      ) : bool {
+      ): bool {
             $finalClass =
                   $Namespace . PHP_EOL .
                   $Uses . PHP_EOL .

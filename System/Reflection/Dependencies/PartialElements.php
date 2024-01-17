@@ -54,8 +54,8 @@ final class PartialElements
 
       private function getNamespace(string $headers): string
       {
-            $namespaceStart = strpos($headers, PartialConst::Tag_Namespace)
-                  + strlen(PartialConst::Tag_Namespace);
+            $namespaceStart = strpos($headers, PartialConstants::Tag_Namespace)
+                  + strlen(PartialConstants::Tag_Namespace);
 
             return substr(
                   $headers,
@@ -82,7 +82,7 @@ final class PartialElements
             preg_match($classPattern, $headers, $class_match);
 
             return (count($class_match) > 0
-                  ? str_replace(PartialConst::Tag_Class, "", $class_match[0])
+                  ? str_replace(PartialConstants::Tag_Class, "", $class_match[0])
                   : "");
       }
 
@@ -95,8 +95,8 @@ final class PartialElements
                   ? substr(
                         $extends_match[1],
                         0,
-                        (strpos($extends_match[1], PartialConst::Tag_Interfaces) > 0
-                              ? strpos($extends_match[1], PartialConst::Tag_Interfaces)
+                        (strpos($extends_match[1], PartialConstants::Tag_Interfaces) > 0
+                              ? strpos($extends_match[1], PartialConstants::Tag_Interfaces)
                               : strlen($extends_match[1]))
                   )
                   : "");

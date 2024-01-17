@@ -29,7 +29,7 @@
 namespace System\Reflection\Dependencies;
 
 require __DIR__ . "/../../Attributes/PartialsAttributes.php";
-require __DIR__ . "/PartialConst.php";
+require __DIR__ . "/PartialConstants.php";
 require __DIR__ . "/PartialEnum.php";
 require __DIR__ . "/PartialElements.php";
 require __DIR__ . "/PartialElementsCollection.php";
@@ -84,7 +84,7 @@ final class Loader
                   || (str_replace("/", "\\", $fullPath) == __FILE__));
       }
 
-      private static function getContentIfPHPFile($path) : string
+      private static function getContentIfPHPFile($path): string
       {
             return Loader::$php_as_partial
                   ? file_get_contents($path)
@@ -93,8 +93,9 @@ final class Loader
 
       private static function addToCollection(
             PartialElementsCollection &$collection,
-            string $content, string $filename) : bool
-      {
+            string $content,
+            string $filename
+      ): bool {
             if (strpos($content, Partial_Attribute) > 0) {
                   $collection->add(
                         new PartialElements(
@@ -114,7 +115,7 @@ final class Loader
             $dependants = array();
 
             $partialsCollection = new PartialElementsCollection();
-            
+
             foreach (scandir($path) as $filename) {
                   $currentPath = $path . '/' . $filename;
 
@@ -138,17 +139,15 @@ final class Loader
                                                 Loader::$Counter++;
                                     break;
                         }
-                  }
-                  else if (is_dir($currentPath))
-                  {
+                  } else if (is_dir($currentPath)) {
                         $dependants = array_merge(
                               $dependants,
-                              Loader::loadDependenciesFromPath($currentPath));
+                              Loader::loadDependenciesFromPath($currentPath)
+                        );
                   }
             }
 
-            if ($partialsCollection->count() > 0)
-            {
+            if ($partialsCollection->count() > 0) {
                   if ($partialsCollection->CompilePartials())
                         Loader::$Counter++;
             }
@@ -156,7 +155,7 @@ final class Loader
             return $dependants;
       }
 
-      private static function standardPHPFileLoader($path) : bool
+      private static function standardPHPFileLoader($path): bool
       {
             try {
                   require_once $path;
