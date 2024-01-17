@@ -158,7 +158,11 @@ final class Loader
       private static function standardPHPFileLoader($path): bool
       {
             try {
-                  require_once $path;
+                  if (!in_array(
+                        str_replace('/', '\\', $path),
+                        get_included_files()))
+                        require $path;
+
                   return true;
             } catch (\Error $e) {
                   array_push($dependants, $path);
@@ -169,7 +173,11 @@ final class Loader
       {
             for ($index = 0; $index < count(Loader::$dependants); $index++) {
                   try {
-                        require Loader::$dependants[$index];
+                        if (!in_array(
+                              str_replace('/', '\\', Loader::$dependants[$index]),
+                              get_included_files()))
+                              require Loader::$dependants[$index];
+
                         array_push(Loader::$dependants_Loaded, $index);
                   } catch (\Error $e) {
                   }
