@@ -118,12 +118,29 @@ final class PartialElementsCollection implements Iterator
             return false;
       }
 
+      private function FinalAbstractRulesValids() : bool
+      {
+            if ($this->elements[0]->getObjectType() == PartialEnumerations_ObjectType::_Class)
+            {
+                  if ($this->isAbstractClass() && $this->isFinalClass())
+                        throw new Exception(
+                              PartialMessages::ExceptionOnFinalAndAbstractClass . 
+                              " on " . $this->elements[0]->ElementName);
+            }
+            else
+            {
+                  if ($this->isAbstractClass() || $this->isFinalClass())
+                        throw new Exception(
+                              PartialMessages::ExceptionOnFinalOrAbstractObject . 
+                              " on " . $this->elements[0]->ElementName);
+            }
+
+            return true;
+      }
+
       public function CompilePartials(): bool
       {
-            if ($this->isAbstractClass() && $this->isFinalClass())
-                  throw new Exception(
-                        PartialMessages::ExceptionOnFinalAndAbstractClass . 
-                        " on " . $this->elements[0]->ElementName);
+            $this->FinalAbstractRulesValids();
 
             $Namespace = PartialConstants::Tag_Namespace . $this->elements[0]->Namespace . ';' . PHP_EOL;
             $ClassName =

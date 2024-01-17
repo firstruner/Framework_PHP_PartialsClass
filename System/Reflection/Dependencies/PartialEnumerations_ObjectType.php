@@ -30,6 +30,7 @@ namespace System\Reflection\Dependencies;
 
 abstract class PartialEnumerations_ObjectType
 {
+      public const _Other = 0;
       public const _Class = 1;
       public const _Interface = 2;
       public const _Enumeration = 4;

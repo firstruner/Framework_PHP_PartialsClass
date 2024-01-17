@@ -41,11 +41,14 @@ final class PartialElements
       public bool $isAbstract = false;
       public bool $isFinal = false;
 
-      private PartialEnumerations_ObjectType $objectType;
+      private int $objectType = 0;
+      private string $header = "";
 
       private const class_Pattern = "/\bclass\s+([a-zA-Z0-9_-])+/";
       private const interface_Pattern = "/\binterface\s+([a-zA-Z0-9_-])+/";
       private const trait_Pattern = "/\btrait\s+([a-zA-Z0-9_-])+/";
+      private const enum_Pattern = "/\benum\s+([a-zA-Z0-9_-])+/";
+      private const empty_Pattern = "/\b([a-zA-Z0-9_-])+/";
 
       function __construct(string $content, string $tagFile)
       {
@@ -59,6 +62,12 @@ final class PartialElements
 
             $this->Tag_File = $tagFile;
             $this->Content = $this->extractContents($content);
+            $this->objectType = PartialEnumerations_ObjectType::_Other;
+      }
+
+      public function getObjectType() : int
+      {
+            return $this->objectType;
       }
 
       private function getNamespace(string $headers): string
@@ -85,20 +94,68 @@ final class PartialElements
             return "";
       }
 
-      private function getElementPart(string $header) : string
+      private function setElementType()
       {
-            return "";
+            if (preg_match(
+                  $this::class_Pattern,
+                  $this->header) > 0)
+                  $this->objectType = PartialEnumerations_ObjectType::_Class;
+
+            if (preg_match(
+                  $this::interface_Pattern,
+                  $this->header) > 0)
+                  $this->objectType = PartialEnumerations_ObjectType::_Interface;
+
+            if (preg_match(
+                  $this::trait_Pattern,
+                  $this->header) > 0)
+                  $this->objectType = PartialEnumerations_ObjectType::_Trait;
+
+            if (preg_match(
+                  $this::enum_Pattern,
+                  $this->header) > 0)
+                  $this->objectType = PartialEnumerations_ObjectType::_Enumeration;
       }
 
-      // Upgrade this !
+      private function getElementPattern() : string
+      {
+            switch ($this->objectType)
+            {
+                  case PartialEnumerations_ObjectType::_Class;
+                        return $this::class_Pattern;
+                  case PartialEnumerations_ObjectType::_Interface;
+                        return $this::interface_Pattern;
+                  case PartialEnumerations_ObjectType::_Trait;
+                        return $this::trait_Pattern;
+                  case PartialEnumerations_ObjectType::_Enumeration;
+                        return $this::enum_Pattern;
+                  default:
+                        return $this::empty_Pattern;                  
+            }
+      }
+
+      public function getHeaderTag() : string
+      {
+            switch ($this->objectType)
+            {
+                  case PartialEnumerations_ObjectType::_Class;
+                        return PartialConstants::Tag_Class;
+                  case PartialEnumerations_ObjectType::_Interface;
+                        return PartialConstants::Tag_Implements;
+                  case PartialEnumerations_ObjectType::_Trait;
+                        return PartialConstants::Tag_Trait;
+                  case PartialEnumerations_ObjectType::_Enumeration;
+                        return PartialConstants::Tag_Enum;
+                  default:
+                        return "";                  
+            }
+      }
+
       private function getElementName(string $headers) : string
       {
-            $classPattern = "/\bclass\s+([a-zA-Z0-9_-])+/";
-            
             preg_match(
-                  $classPattern,
-                  substr($headers,
-                        strpos($headers, PartialConstants::Partial_Attribute)),
+                  $this->getElementPattern(),
+                  $this->header,
                   $class_match);
 
             if (count($class_match) > 0)
@@ -106,7 +163,7 @@ final class PartialElements
                   $this->isAbstract |= (strpos($headers, 'abstract ' . $class_match[0]) > 0);
                   $this->isFinal |= (strpos($headers, 'final ' . $class_match[0]) > 0);
                   
-                  return str_replace(PartialConstants::Tag_Class, "", $class_match[0]);
+                  return str_replace($this->getHeaderTag(), "", $class_match[0]);
             }
 
             return "";
@@ -139,6 +196,11 @@ final class PartialElements
 
       private function detectClassHeaders(string $headers)
       {
+            $this->header = substr($headers,
+                  strpos($headers, PartialConstants::Partial_Attribute));
+            
+            $this->setElementType();
+
             $this->Namespace = $this->getNamespace($headers);
             $this->Uses = $this->getUses($headers);
             $this->ElementName = $this->getElementName($headers);
