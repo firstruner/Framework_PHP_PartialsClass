@@ -32,6 +32,7 @@ require __DIR__ . "/../../Attributes/PartialsAttributes.php";
 require __DIR__ . "/PartialConst.php";
 require __DIR__ . "/PartialEnum.php";
 require __DIR__ . "/PartialElements.php";
+require __DIR__ . "/PartialElementsCollection.php";
 
 final class Loader
 {

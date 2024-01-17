@@ -33,8 +33,8 @@ final class PartialElements
       readonly string $Namespace;
       readonly string $Uses;
       readonly string $ClassName;
-      readonly string $Inherits;
-      readonly string $Interfaces;
+      readonly string $Extends;
+      readonly string $Implements;
       readonly string $Content;
       readonly string $Tag_File;
 
@@ -116,8 +116,8 @@ final class PartialElements
             $this->Namespace = $this->getNamespace($headers);
             $this->Uses = $this->getUses($headers);
             $this->ClassName = $this->getClassName($headers);
-            $this->Inherits = $this->getInheritsNames($headers);
-            $this->Interfaces = $this->getInterfaceNames($headers);
+            $this->Extends = $this->getInheritsNames($headers);
+            $this->Implements = $this->getInterfaceNames($headers);
       }
 
       private function extractContents(string $content): string

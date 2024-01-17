@@ -79,11 +79,11 @@ final class PartialElementsCollection implements Iterator
 
             switch ($compileType) {
                   case PartialEnum::_Extends:
-                        $incorpoElement = $partial->Inherits;
+                        $incorpoElement = $partial->Extends;
                         $prefix = (strlen($currentContent) > 0 ? ", " : PartialConst::Tag_Extends);
                         break;
                   case PartialEnum::_Implements:
-                        $incorpoElement = $partial->implements;
+                        $incorpoElement = $partial->Implements;
                         $prefix = (strlen($currentContent) > 0 ? ", " : PartialConst::Tag_Interfaces);
                         break;
             }
