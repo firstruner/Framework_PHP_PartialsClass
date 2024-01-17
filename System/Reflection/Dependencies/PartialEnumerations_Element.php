@@ -28,7 +28,7 @@
 
 namespace System\Reflection\Dependencies;
 
-abstract class PartialEnum
+abstract class PartialEnumerations_Element
 {
       public const _Namespace = 1;
       public const _Uses = 2;

@@ -32,7 +32,10 @@ abstract class PartialConstants
 {
       const Tag_Namespace = "namespace ";
       const Tag_Class = "class ";
-      const Tag_Interfaces = "implements ";
+      const Tag_Enum = "enum ";
+      const Tag_Trait = "trait ";
+      const Tag_Interface = "interface ";
+      const Tag_Implements = "implements ";
       const Tag_Extends = "extends ";
       const Tag_Use = "use ";
       const Partial_Attribute = "#" . "[Partial]";

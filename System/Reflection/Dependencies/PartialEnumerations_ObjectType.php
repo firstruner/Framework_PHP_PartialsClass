@@ -28,9 +28,10 @@
 
 namespace System\Reflection\Dependencies;
 
-abstract class PartialMessages
+abstract class PartialEnumerations_ObjectType
 {
-      const ExceptionOnLoading = "Error when loading partials class file";
-      const ExceptionOnFinalAndAbstractClass = "Class cannot be final and abstract both";
-      const ExceptionOnFinalOrAbstractObject = "Object cannot be final or abstract";
+      public const _Class = 1;
+      public const _Interface = 2;
+      public const _Enumeration = 4;
+      public const _Trait = 8;
 }

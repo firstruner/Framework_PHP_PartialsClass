@@ -30,7 +30,8 @@ namespace System\Reflection\Dependencies;
 
 require __DIR__ . "/../../Attributes/PartialsAttributes.php";
 require __DIR__ . "/PartialConstants.php";
-require __DIR__ . "/PartialEnum.php";
+require __DIR__ . "/PartialEnumerations_Element.php";
+require __DIR__ . "/PartialEnumerations_ObjectType.php";
 require __DIR__ . "/PartialElements.php";
 require __DIR__ . "/PartialElementsCollection.php";
 

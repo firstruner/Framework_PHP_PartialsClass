@@ -32,7 +32,7 @@ final class PartialElements
 {
       readonly string $Namespace;
       readonly string $Uses;
-      readonly string $ClassName;
+      readonly string $ElementName;
       readonly string $Extends;
       readonly string $Implements;
       readonly string $Content;
@@ -40,6 +40,12 @@ final class PartialElements
 
       public bool $isAbstract = false;
       public bool $isFinal = false;
+
+      private PartialEnumerations_ObjectType $objectType;
+
+      private const class_Pattern = "/\bclass\s+([a-zA-Z0-9_-])+/";
+      private const interface_Pattern = "/\binterface\s+([a-zA-Z0-9_-])+/";
+      private const trait_Pattern = "/\btrait\s+([a-zA-Z0-9_-])+/";
 
       function __construct(string $content, string $tagFile)
       {
@@ -79,7 +85,13 @@ final class PartialElements
             return "";
       }
 
-      private function getClassName(string $headers): string
+      private function getElementPart(string $header) : string
+      {
+            return "";
+      }
+
+      // Upgrade this !
+      private function getElementName(string $headers) : string
       {
             $classPattern = "/\bclass\s+([a-zA-Z0-9_-])+/";
             
@@ -109,14 +121,14 @@ final class PartialElements
                   ? substr(
                         $extends_match[1],
                         0,
-                        (strpos($extends_match[1], PartialConstants::Tag_Interfaces) > 0
-                              ? strpos($extends_match[1], PartialConstants::Tag_Interfaces)
+                        (strpos($extends_match[1], PartialConstants::Tag_Implements) > 0
+                              ? strpos($extends_match[1], PartialConstants::Tag_Implements)
                               : strlen($extends_match[1]))
                   )
                   : "");
       }
 
-      private function getInterfaceNames(string $headers): string
+      private function getImplementsNames(string $headers): string
       {
             preg_match_all("/\bimplements\s+([\\a-zA-Z0-9_\\\\]+((\s)*(,)*(\s)*))/", $headers, $matches);
 
@@ -129,9 +141,9 @@ final class PartialElements
       {
             $this->Namespace = $this->getNamespace($headers);
             $this->Uses = $this->getUses($headers);
-            $this->ClassName = $this->getClassName($headers);
+            $this->ElementName = $this->getElementName($headers);
             $this->Extends = $this->getInheritsNames($headers);
-            $this->Implements = $this->getInterfaceNames($headers);
+            $this->Implements = $this->getImplementsNames($headers);
       }
 
       private function extractContents(string $content): string

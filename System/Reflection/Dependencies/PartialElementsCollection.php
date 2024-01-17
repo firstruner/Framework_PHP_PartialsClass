@@ -84,13 +84,13 @@ final class PartialElementsCollection implements Iterator
             $prefix = "";
 
             switch ($compileType) {
-                  case PartialEnum::_Extends:
+                  case PartialEnumerations_Element::_Extends:
                         $incorpoElement = $partial->Extends;
                         $prefix = (strlen($currentContent) > 0 ? ", " : PartialConstants::Tag_Extends);
                         break;
-                  case PartialEnum::_Implements:
+                  case PartialEnumerations_Element::_Implements:
                         $incorpoElement = $partial->Implements;
-                        $prefix = (strlen($currentContent) > 0 ? ", " : PartialConstants::Tag_Interfaces);
+                        $prefix = (strlen($currentContent) > 0 ? ", " : PartialConstants::Tag_Implements);
                         break;
             }
 
@@ -122,14 +122,14 @@ final class PartialElementsCollection implements Iterator
       {
             if ($this->isAbstractClass() && $this->isFinalClass())
                   throw new Exception(
-                        PartialMessages::ExceptionOnFinalAndAbstract . 
-                        " on " . $this->elements[0]->ClassName);
+                        PartialMessages::ExceptionOnFinalAndAbstractClass . 
+                        " on " . $this->elements[0]->ElementName);
 
             $Namespace = PartialConstants::Tag_Namespace . $this->elements[0]->Namespace . ';' . PHP_EOL;
             $ClassName =
                   ($this->isFinalClass() ? "final " : "") .
                   ($this->isAbstractClass() ? "abstract " : "") .
-                  PartialConstants::Tag_Class . $this->elements[0]->ClassName . PHP_EOL;
+                  PartialConstants::Tag_Class . $this->elements[0]->ElementName . PHP_EOL;
 
             $Uses = "";
             $Extends = "";
@@ -138,8 +138,8 @@ final class PartialElementsCollection implements Iterator
 
             foreach ($this->elements as $partial) {
                   $Uses .= $partial->Tag_File . PHP_EOL . $partial->Uses . PHP_EOL;
-                  $Extends .= $this->extendsCompiler(PartialEnum::_Extends, $Extends, $partial);
-                  $Implements .= $this->extendsCompiler(PartialEnum::_Implements, $Implements, $partial);
+                  $Extends .= $this->extendsCompiler(PartialEnumerations_Element::_Extends, $Extends, $partial);
+                  $Implements .= $this->extendsCompiler(PartialEnumerations_Element::_Implements, $Implements, $partial);
                   $Contents .= $partial->Tag_File . PHP_EOL . $partial->Content . PHP_EOL;
             }
 
