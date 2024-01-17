@@ -47,32 +47,9 @@ final class Loader
       private const PhpPartialExtension = "partial_php";
       private const PartialFileHeading = "// --- File : ";
 
-      public static function Load(string $path, int $maxTemptatives = 1, $php_as_partial = false)
-      {
-            Loader::$Counter = 0;
-            Loader::$dependants = array();
-            Loader::$dependants_Loaded = array();
-            Loader::$php_as_partial = $php_as_partial;
-
-            // Main load
-            Loader::loadDependencies($path);
-
-            for ($attempt = 0; $attempt < $maxTemptatives; $attempt++) {
-                  if (count(Loader::$dependants) > 0)
-                        Loader::newTemptative();
-
-                  Loader::clearLoaded();
-            }
-      }
-
       public static function GetLastDependenciesCount(): int
       {
             return Loader::$Counter;
-      }
-
-      private static function loadDependencies(string $path)
-      {
-            Loader::$dependants = Loader::loadDependenciesFromPath($path);
       }
 
       private static function IsNotLoadable(string $fullPath)
@@ -84,14 +61,70 @@ final class Loader
                   || (str_replace("/", "\\", $fullPath) == __FILE__));
       }
 
-      private static function getContentIfPHPFile($path): string
+      public static function Load(string $path, int $maxTemptatives = 1, $php_as_partial = false)
       {
-            return Loader::$php_as_partial
-                  ? file_get_contents($path)
-                  : "";
+            Loader::$Counter = 0;
+            Loader::$dependants = array();
+            Loader::$dependants_Loaded = array();
+            Loader::$php_as_partial = $php_as_partial;
+
+            // Main load
+            Loader::$dependants = Loader::LoadFromPath($path);
+
+            for ($attempt = 0; $attempt < $maxTemptatives; $attempt++) {
+                  if (count(Loader::$dependants) > 0)
+                        Loader::StandardPHP_NewTemptative();
+
+                  Loader::StandardPHP_ClearLoaded();
+            }
       }
 
-      private static function addToCollection(
+      private static function LoadFromPath(string $path): array
+      {
+            $dependants = array();
+
+            $partialsCollection = new PartialElementsCollection();
+
+            foreach (scandir($path) as $filename) {
+                  $currentPath = $path . '/' . $filename;
+
+                  if (Loader::IsNotLoadable($currentPath, $filename))
+                        continue;
+
+                  if (is_file($currentPath)) {
+                        $ext = pathinfo($currentPath, PATHINFO_EXTENSION);
+                        $preload = "";
+
+                        switch ($ext) {
+                              case Loader::PhpExtension:
+                                    $preload = Loader::StandardPHP_TryGetContent($currentPath);
+                              case Loader::PhpPartialExtension:
+                                    if (!Loader::PartialPHP_AddToCollection(
+                                          $partialsCollection,
+                                          strlen($preload) > 0 ? $preload : file_get_contents($currentPath),
+                                          $filename
+                                    ))
+                                          if (Loader::StandardPHP_LoadFile($currentPath))
+                                                Loader::$Counter++;
+                                    break;
+                        }
+                  } else if (is_dir($currentPath)) {
+                        $dependants = array_merge(
+                              $dependants,
+                              Loader::LoadFromPath($currentPath)
+                        );
+                  }
+            }
+
+            if ($partialsCollection->count() > 0) {
+                  if ($partialsCollection->CompilePartials())
+                        Loader::$Counter++;
+            }
+
+            return $dependants;
+      }
+
+      private static function PartialPHP_AddToCollection(
             PartialElementsCollection &$collection,
             string $content,
             string $filename
@@ -110,75 +143,11 @@ final class Loader
             return false;
       }
 
-      private static function loadDependenciesFromPath(string $path): array
-      {
-            $dependants = array();
-
-            $partialsCollection = new PartialElementsCollection();
-
-            foreach (scandir($path) as $filename) {
-                  $currentPath = $path . '/' . $filename;
-
-                  if (Loader::IsNotLoadable($currentPath, $filename))
-                        continue;
-
-                  if (is_file($currentPath)) {
-                        $ext = pathinfo($currentPath, PATHINFO_EXTENSION);
-                        $preload = "";
-
-                        switch ($ext) {
-                              case Loader::PhpExtension:
-                                    $preload = Loader::getContentIfPHPFile($currentPath);
-                              case Loader::PhpPartialExtension:
-                                    if (!Loader::addToCollection(
-                                          $partialsCollection,
-                                          strlen($preload) > 0 ? $preload : file_get_contents($currentPath),
-                                          $filename
-                                    ))
-                                          if (Loader::standardPHPFileLoader($currentPath))
-                                                Loader::$Counter++;
-                                    break;
-                        }
-                  } else if (is_dir($currentPath)) {
-                        $dependants = array_merge(
-                              $dependants,
-                              Loader::loadDependenciesFromPath($currentPath)
-                        );
-                  }
-            }
-
-            if ($partialsCollection->count() > 0) {
-                  if ($partialsCollection->CompilePartials())
-                        Loader::$Counter++;
-            }
-
-            return $dependants;
-      }
-
-      private static function loadDependency($path)
-      {
-            if (!in_array(
-                  str_replace('/', '\\', $path),
-                  get_included_files()))
-                  require $path;
-      }
-
-      private static function standardPHPFileLoader($path): bool
-      {
-            try {
-                  Loader::loadDependency($path);
-
-                  return true;
-            } catch (\Error $e) {
-                  array_push($dependants, $path);
-            }
-      }
-
-      private static function newTemptative()
+      private static function StandardPHP_NewTemptative()
       {
             for ($index = 0; $index < count(Loader::$dependants); $index++) {
                   try {
-                        Loader::loadDependency(Loader::$dependants[$index]);
+                        Loader::StandardPHP_LoadDependency(Loader::$dependants[$index]);
 
                         array_push(Loader::$dependants_Loaded, $index);
                   }
@@ -187,11 +156,37 @@ final class Loader
             }
       }
 
-      private static function clearLoaded()
+      private static function StandardPHP_ClearLoaded()
       {
             rsort(Loader::$dependants_Loaded);
 
             for ($index = 0; $index < count(Loader::$dependants_Loaded); $index++)
                   unset(Loader::$dependants[$index]);
+      }
+
+      private static function StandardPHP_LoadFile($path): bool
+      {
+            try {
+                  Loader::StandardPHP_LoadDependency($path);
+
+                  return true;
+            } catch (\Error $e) {
+                  array_push($dependants, $path);
+            }
+      }
+
+      private static function StandardPHP_TryGetContent($path): string
+      {
+            return Loader::$php_as_partial
+                  ? file_get_contents($path)
+                  : "";
+      }
+
+      private static function StandardPHP_LoadDependency($path)
+      {
+            if (!in_array(
+                  str_replace('/', '\\', $path),
+                  get_included_files()))
+                  require $path;
       }
 }
