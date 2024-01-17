@@ -1,12 +1,15 @@
-# Framework PHP - Partials functions
+# 🛠️ Framework PHP - Partials functions
 Part of Firstruner Framework for PHP to allow use Partial function with PHP class
 
-This project is a part of Firstruner Framework for PHP.
+This project is a part of 🛠️ Firstruner Framework for PHP.
 It contains a little part of the original Framework that allow you to use "partial" DotNet functionality into PHP structure project and also naturally the Framework loader.
 
 To use, it's very simple !
 
-## Loader
+## PHP version
+⚗️ Actually tested on PHP 8.2.4
+
+## 🧙‍♂️ Loader
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
 
     // The only required dependence for Firstruner Framework
@@ -18,7 +21,13 @@ Create a folder that contains all of your POO Objects (classes, interfaces, enum
     // Load all php POO files in "System" Folder
     Loader::Load(__DIR__ . '/System');
 
-Note : For standard use, partial file must have "partial_php" extension, but it's possible to use "php" extension if you specify "php_as_partial" attribute to "True" when "Load" method was called.
+## Notes
+👉 Loading note : it's recommended to load elements in this ordre :
+ 1. Enumerations
+ 2. Interfaces
+ 3. Classes
+
+👉 File extension note : For standard use, partial file must have "partial_php" extension, but it's possible to use "php" extension if you specify "php_as_partial" attribute to "True" when "Load" method was called.
 But use "php" are more lazy because it necessary to load the php file before determine if the file is a partial file.
 
 ## Class creation
@@ -35,7 +44,10 @@ Now define the class as main partial class with using Partial attribute like thi
 
     #[Partial]
 
-#### Full main partial class sample
+### Final and abstract classes
+🌞 Since the 1.2.* version, you can specify independently final or abstract by file
+
+#### 📚 Full main partial class sample
 
     <?php
     namespace System\Printers;
@@ -52,10 +64,10 @@ Now define the class as main partial class with using Partial attribute like thi
     }
 
 ## Uses, inheritance and implementations
-Since the 1.1.* version, you can specify independently inheritance and implementation by file
+🌞 Since the 1.1.* version, you can specify independently inheritance and implementation by file
 
-### Sample 1
-##### File 1
+### 📚 Sample 1
+##### 📗 File 1
 
     namespace  System\Sample;
     
@@ -67,7 +79,7 @@ Since the 1.1.* version, you can specify independently inheritance and implement
     {
     }
 
-##### File 
+##### 📘 File 
 
     namespace  System\Sample;
     
@@ -83,8 +95,8 @@ Since the 1.1.* version, you can specify independently inheritance and implement
     {
     }
 
-### Sample 2
-##### File 1
+### 📚 Sample 2
+##### 📗 File 1
 
     namespace  System\Sample;
     
@@ -96,7 +108,7 @@ Since the 1.1.* version, you can specify independently inheritance and implement
     {
     }
 
-##### File 
+##### 📘 File 
 
     namespace  System\Sample;
     
@@ -112,5 +124,6 @@ Since the 1.1.* version, you can specify independently inheritance and implement
     {
     }
 
-## Features
-"final" and "abstract" are present in the next version : 1.2 !
+## 🎇 Features
+💫 "final" and "abstract" are present in release version : 1.2 !
+💫 next version v2.0 support partial interfaces, enumerations and traits (lol)
