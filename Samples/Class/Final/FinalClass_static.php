@@ -26,14 +26,15 @@
  * @version 1.2.0
  */
 
-namespace System\Samples;
+namespace Samples\Class;
 
 use System\Attributes\Partial;
 
 #[Partial]
-class MultiplesSimple
+final class FinalClass
 {
-      public int $id;
-      public string $firstname;
-      public string $lastname;
+      public static function PrintStaticMessage()
+      {
+            echo "Static message";
+      }
 }

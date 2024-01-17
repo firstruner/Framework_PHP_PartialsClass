@@ -26,15 +26,14 @@
  * @version 1.2.0
  */
 
-namespace System\Samples;
+namespace Samples\Class;
 
 use System\Attributes\Partial;
 
 #[Partial]
-class ExtendedClass extends AbstractedClass
+class ImplementedClass implements InterfaceSample
 {
-      public function NewMethod()
+      public function testInterface()
       {
-            echo "New method";
       }
 }

@@ -26,15 +26,15 @@
  * @version 1.2.0
  */
 
-namespace System\Samples;
+namespace Samples\Class;
 
 use System\Attributes\Partial;
 
 #[Partial]
-class Simple
+class MultiplesSimple
 {
-      public static function PrintStaticMessage()
+      function __construct()
       {
-            echo "Static message";
+            // This is a constructor
       }
 }

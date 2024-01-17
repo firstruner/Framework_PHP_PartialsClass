@@ -26,15 +26,15 @@
  * @version 1.2.0
  */
 
-namespace System\Samples;
+namespace Samples\Class;
 
 use System\Attributes\Partial;
 
 #[Partial]
-class ImplementedClass implements InterfaceSample
+class Simple
 {
-      public function testInterface()
+      public function PrintInstanceMessage()
       {
-            
+            echo "Mon Instance";
       }
 }

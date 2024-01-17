@@ -26,15 +26,15 @@
  * @version 1.2.0
  */
 
-namespace System\Samples;
+namespace Samples\Class;
 
 use System\Attributes\Partial;
 
 #[Partial]
-class FinalClass
+class ExtendedClass extends AbstractedClass
 {
-      public function PrintInstanceMessage()
+      public function NewMethod()
       {
-            echo "Mon Instance";
+            echo "New method";
       }
 }

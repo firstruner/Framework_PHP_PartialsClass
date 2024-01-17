@@ -26,14 +26,20 @@
  * @version 1.2.0
  */
 
-namespace System\Samples;
+namespace Samples\Class;
 
 use System\Attributes\Partial;
 
 #[Partial]
-class ExtendedClass
+class MultiplesSimple
 {
-      public int $id;
-      public string $firstname;
-      public string $lastname;
+      public function MethodOne()
+      {
+            echo "Method One";
+      }
+
+      public function MethodTwo()
+      {
+            echo "Method Two";
+      }
 }

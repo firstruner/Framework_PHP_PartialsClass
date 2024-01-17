@@ -34,16 +34,22 @@ require __DIR__ . '/System/Reflection/Dependencies/Loader.php';
 // For multiple use of Loader class
 use System\Reflection\Dependencies\Loader;
 
-// Load all php POO files in "System" folder
+// Load all php standard POO files in "System" folder
 Loader::Load(__DIR__ . '/System', php_as_partial: true);
+
+// It's recommended to load interfaces before class
+Loader::Load(__DIR__ . '/Samples_Interfaces', php_as_partial: true);
+
+// Load partial samples classes
+Loader::Load(__DIR__ . '/Samples', php_as_partial: true);
 
 // Consume partial class
 echo '--- Use Class ---' . PHP_EOL;
 
 // Consume an instance class object
-$obj = new System\Samples\Simple();
+$obj = new Samples\Class\Simple();
 $obj->PrintInstanceMessage();
 
 // Consume a static method in same class object
 echo PHP_EOL;
-System\Samples\Simple::PrintStaticMessage();
+Samples\Class\Simple::PrintStaticMessage();

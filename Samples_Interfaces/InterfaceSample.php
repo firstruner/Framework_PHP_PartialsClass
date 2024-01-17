@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is a partial class sample
+ * This file is a interface sample
  */
 
 /**
@@ -26,15 +26,9 @@
  * @version 1.2.0
  */
 
-namespace System\Samples;
+namespace Samples\Class;
 
-use System\Attributes\Partial;
-
-#[Partial]
-class MultiplesSimple
+interface InterfaceSample
 {
-      function __construct()
-      {
-            // This is a constructor
-      }
+      function testInterface();
 }

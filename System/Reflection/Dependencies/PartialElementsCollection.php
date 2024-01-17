@@ -178,5 +178,7 @@ final class PartialElementsCollection implements Iterator
                         " on " . $ClassName . " - " .
                         $e->getMessage());
             }
+
+            return false;
       }
 }

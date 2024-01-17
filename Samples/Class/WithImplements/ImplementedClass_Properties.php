@@ -26,15 +26,14 @@
  * @version 1.2.0
  */
 
-namespace System\Samples;
+namespace Samples\Class;
 
 use System\Attributes\Partial;
 
 #[Partial]
-abstract class AbstractedClass
+class ImplementedClass
 {
-      public function PrintInstanceMessage()
-      {
-            echo "Mon Instance";
-      }
+      public int $id;
+      public string $firstname;
+      public string $lastname;
 }

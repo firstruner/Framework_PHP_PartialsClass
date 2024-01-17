@@ -26,12 +26,12 @@
  * @version 1.2.0
  */
 
-namespace System\Samples;
+namespace Samples\Class;
 
 use System\Attributes\Partial;
 
 #[Partial]
-final class FinalClass
+class AbstractedClass
 {
       public static function PrintStaticMessage()
       {

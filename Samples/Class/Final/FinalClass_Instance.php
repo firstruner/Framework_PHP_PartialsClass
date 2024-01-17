@@ -26,9 +26,15 @@
  * @version 1.2.0
  */
 
-namespace System\Samples;
+namespace Samples\Class;
 
-interface InterfaceSample
+use System\Attributes\Partial;
+
+#[Partial]
+class FinalClass
 {
-      function testInterface();
+      public function PrintInstanceMessage()
+      {
+            echo "Mon Instance";
+      }
 }
