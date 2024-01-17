@@ -31,7 +31,7 @@ namespace System\Sample;
 use System\Attributes\Partial;
 
 #[Partial]
-class Sample
+final class Sample
 {
       public static function PrintStaticMessage()
       {

@@ -26,11 +26,10 @@
  * @version 1.2.0
  */
 
-namespace System\Attributes;
+namespace System\Reflection\Dependencies;
 
-use Attribute;
-
-#[Attribute(Attribute::TARGET_CLASS)]
-final class Partial
+abstract class PartialMessages
 {
+      const ExceptionOnLoading = "Error when loading partials class file";
+      const ExceptionOnFinalAndAbstract = "Class cannot be final and abstract both";
 }

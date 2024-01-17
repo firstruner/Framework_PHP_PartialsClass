@@ -129,7 +129,7 @@ final class Loader
             string $content,
             string $filename
       ): bool {
-            if (strpos($content, Partial_Attribute) > 0) {
+            if (strpos($content, PartialConstants::Partial_Attribute) > 0) {
                   $collection->add(
                         new PartialElements(
                               $content,

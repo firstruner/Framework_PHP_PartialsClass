@@ -35,4 +35,5 @@ abstract class PartialConstants
       const Tag_Interfaces = "implements ";
       const Tag_Extends = "extends ";
       const Tag_Use = "use ";
+      const Partial_Attribute = "#" . "[Partial]";
 }

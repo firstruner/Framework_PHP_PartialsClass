@@ -28,11 +28,11 @@
 
 namespace System\Reflection\Dependencies;
 
+use Exception;
 use Iterator;
 
 final class PartialElementsCollection implements Iterator
 {
-      private const ExceptionLoadPartialMessage = "Error when loading partials class file : ";
       private const UsePartial = "use System\Attributes\Partial;";
 
       private int $position = 0;
@@ -102,10 +102,34 @@ final class PartialElementsCollection implements Iterator
                   $incorpoElement;
       }
 
+      private function isAbstractClass() : bool
+      {
+            foreach ($this->elements as $elem)
+                  if ($elem->isAbstract) return true;
+            
+            return false;
+      }
+
+      private function isFinalClass() : bool
+      {
+            foreach ($this->elements as $elem)
+                  if ($elem->isFinal) return true;
+            
+            return false;
+      }
+
       public function CompilePartials(): bool
       {
+            if ($this->isAbstractClass() && $this->isFinalClass())
+                  throw new Exception(
+                        PartialMessages::ExceptionOnFinalAndAbstract . 
+                        " on " . $this->elements[0]->ClassName);
+
             $Namespace = PartialConstants::Tag_Namespace . $this->elements[0]->Namespace . ';' . PHP_EOL;
-            $ClassName = PartialConstants::Tag_Class . $this->elements[0]->ClassName . PHP_EOL;
+            $ClassName =
+                  ($this->isFinalClass() ? "final " : "") .
+                  ($this->isAbstractClass() ? "abstract " : "") .
+                  PartialConstants::Tag_Class . $this->elements[0]->ClassName . PHP_EOL;
 
             $Uses = "";
             $Extends = "";
@@ -149,7 +173,9 @@ final class PartialElementsCollection implements Iterator
                   eval($finalClass);
                   return true;
             } catch (\Error $e) {
-                  echo new \Exception(PartialElementsCollection::ExceptionLoadPartialMessage .
+                  echo new \Exception(
+                        PartialMessages::ExceptionOnLoading .
+                        " on " . $ClassName . " - " .
                         $e->getMessage());
             }
       }

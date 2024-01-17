@@ -31,7 +31,7 @@ namespace System\Sample;
 use System\Attributes\Partial;
 
 #[Partial]
-class Sample
+abstract class Sample
 {
       public function PrintInstanceMessage()
       {

@@ -38,13 +38,16 @@ final class PartialElements
       readonly string $Content;
       readonly string $Tag_File;
 
+      public bool $isAbstract = false;
+      public bool $isFinal = false;
+
       function __construct(string $content, string $tagFile)
       {
             $this->detectClassHeaders(
                   substr(
                         $content,
                         0,
-                        strpos($content, '{', strpos($content, Partial_Attribute))
+                        strpos($content, '{', strpos($content, PartialConstants::Partial_Attribute))
                   )
             );
 
@@ -79,11 +82,22 @@ final class PartialElements
       private function getClassName(string $headers): string
       {
             $classPattern = "/\bclass\s+([a-zA-Z0-9_-])+/";
-            preg_match($classPattern, $headers, $class_match);
+            
+            preg_match(
+                  $classPattern,
+                  substr($headers,
+                        strpos($headers, PartialConstants::Partial_Attribute)),
+                  $class_match);
 
-            return (count($class_match) > 0
-                  ? str_replace(PartialConstants::Tag_Class, "", $class_match[0])
-                  : "");
+            if (count($class_match) > 0)
+            {
+                  $this->isAbstract |= (strpos($headers, 'abstract ' . $class_match[0]) > 0);
+                  $this->isFinal |= (strpos($headers, 'final ' . $class_match[0]) > 0);
+                  
+                  return str_replace(PartialConstants::Tag_Class, "", $class_match[0]);
+            }
+
+            return "";
       }
 
       private function getInheritsNames(string $headers): string
@@ -125,7 +139,7 @@ final class PartialElements
             $indexStart = strpos(
                   $content,
                   '{',
-                  strpos($content, Partial_Attribute)
+                  strpos($content, PartialConstants::Partial_Attribute)
             ) + 1;
 
             return substr(
