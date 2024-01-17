@@ -155,13 +155,18 @@ final class Loader
             return $dependants;
       }
 
+      private static function loadDependency($path)
+      {
+            if (!in_array(
+                  str_replace('/', '\\', $path),
+                  get_included_files()))
+                  require $path;
+      }
+
       private static function standardPHPFileLoader($path): bool
       {
             try {
-                  if (!in_array(
-                        str_replace('/', '\\', $path),
-                        get_included_files()))
-                        require $path;
+                  Loader::loadDependency($path);
 
                   return true;
             } catch (\Error $e) {
@@ -173,13 +178,11 @@ final class Loader
       {
             for ($index = 0; $index < count(Loader::$dependants); $index++) {
                   try {
-                        if (!in_array(
-                              str_replace('/', '\\', Loader::$dependants[$index]),
-                              get_included_files()))
-                              require Loader::$dependants[$index];
+                        Loader::loadDependency(Loader::$dependants[$index]);
 
                         array_push(Loader::$dependants_Loaded, $index);
-                  } catch (\Error $e) {
+                  }
+                  catch (\Error $e) {
                   }
             }
       }
