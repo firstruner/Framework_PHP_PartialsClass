@@ -41,9 +41,9 @@ Loader::Load(__DIR__ . '/System', php_as_partial: true);
 echo '--- Use Class ---' . PHP_EOL;
 
 // Consume an instance class object
-$obj = new System\Sample\Sample();
+$obj = new System\Samples\Simple();
 $obj->PrintInstanceMessage();
 
 // Consume a static method in same class object
 echo PHP_EOL;
-System\Sample\Sample::PrintStaticMessage();
+System\Samples\Simple::PrintStaticMessage();
