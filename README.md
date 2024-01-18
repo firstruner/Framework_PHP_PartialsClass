@@ -1,3 +1,4 @@
+
 # 🛠️ Framework PHP - Partials functions
 Part of Firstruner Framework for PHP to allow use Partial function with PHP OOP objects
 
@@ -10,13 +11,14 @@ To use, it's very simple !
 Actually tested on PHP from 7.1.* to 8.3.*
 
 ## Partials version
+
 🌞 v1.0 Initial repository
 🌞 v1.1 Uses, inheritance and implementations support
 🌞 v1.2 Final and Abstract support for classes
 💫 v2.0 🎇 Features :
-         - Interfaces, Enumerations and Trait support
-         - Conversion Enum files for PHP >= 8.1 to Abstract class files for PHP >= 7.1
-         - Fix exception on Composer Update (Tested with Symfony and Laravel project)
+ 1. Interfaces, Enumerations and Trait support
+ 2. Conversion Enum files for PHP >= 8.1 to Abstract class files for PHP >= 7.1
+ 3. Fix exception on Composer Update (Tested with Symfony and Laravel project)
 
 ## 🧙‍♂️ Loader
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
