@@ -16,6 +16,7 @@ Actually tested on PHP from 7.1.* to 8.3.*
 💫 v2.0 🎇 Features :
          - Interfaces, Enumerations and Trait support
          - Conversion Enum files for PHP >= 8.1 to Abstract class files for PHP >= 7.1
+         - Fix exception on Composer Update (Tested with Symfony and Laravel project)
 
 ## 🧙‍♂️ Loader
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
