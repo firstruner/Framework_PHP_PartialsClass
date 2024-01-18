@@ -28,13 +28,28 @@
 
 namespace System\Reflection\Dependencies;
 
-require __DIR__ . "/../../Attributes/PartialsAttributes.php";
-require __DIR__ . "/../../Environment/PHP.php";
-require __DIR__ . "/PartialConstants.php";
-require __DIR__ . "/PartialEnumerations_Element.php";
-require __DIR__ . "/PartialEnumerations_ObjectType.php";
-require __DIR__ . "/PartialElements.php";
-require __DIR__ . "/PartialElementsCollection.php";
+function InitialLoader() : bool
+{
+      if (in_array(__FILE__, get_included_files()))
+            return true;
+
+      $libs = array(
+            __DIR__ . "/../../Attributes/PartialsAttributes.php",
+            __DIR__ . "/../../Environment/PHP.php",
+            __DIR__ . "/PartialConstants.php",
+            __DIR__ . "/PartialEnumerations_Element.php",
+            __DIR__ . "/PartialEnumerations_ObjectType.php",
+            __DIR__ . "/PartialElements.php",
+            __DIR__ . "/PartialElementsCollection.php"
+      );
+
+      foreach($libs as $lib)
+            Loader::StandardPHP_LoadDependency($lib);
+
+      return true;
+}
+
+InitialLoader();
 
 final class Loader
 {
@@ -183,12 +198,17 @@ final class Loader
                   : "";
       }
 
-      private static function StandardPHP_LoadDependency($path)
+      public static function StandardPHP_LoadDependency($path) : bool
       {
             if (!in_array(
                   str_replace('/', '\\', $path),
                   get_included_files()
             ))
+            {
                   require $path;
+                  return true;
+            }
+
+            return false;
       }
 }

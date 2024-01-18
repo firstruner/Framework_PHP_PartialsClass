@@ -128,3 +128,9 @@ Now define the OOP file as partial with using Partial attribute like this :
     {
     }
 
+## Possible exceptions
+It's possible to have compilation exception during a composer update like this :
+
+[![Composer-Exception.png](https://i.postimg.cc/WzsPyvS2/Composer-Exception.png)](https://postimg.cc/MM34cgh4)
+
+To solve that, please use partial_php extension for your partial files and use the Firstruner Framework Loader for load these partial files
