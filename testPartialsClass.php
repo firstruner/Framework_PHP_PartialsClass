@@ -17,7 +17,9 @@ Loader::Load(__DIR__ . '/System', php_as_partial: true);
 Loader::Load(__DIR__ . '/Samples_Interfaces', php_as_partial: true);
 
 // Load partial samples classes
-Loader::Load(__DIR__ . '/test/Class/Simple', php_as_partial: true);
+Loader::Load(__DIR__ . '/test/Class',
+      php_as_partial: true,
+      ignored:array(__DIR__ . '/test/Class/MultiplesSimple/MultiplesSimple_Methods.php'));
 
 // Consume partial class
 echo '--- Use Class ---' . PHP_EOL;
@@ -30,8 +32,7 @@ $obj->PrintInstanceMessage();
 echo PHP_EOL;
 Samples\Class\Simple::PrintStaticMessage();
 
-Loader::AddIncludePath(__DIR__ . '/test/Class/Final');
-Loader::LoadStoredPaths();
-
-$final = new Samples\Class\FinalClass();
-$obj->PrintInstanceMessage();
+$final = new Samples\Class\MultiplesSimple();
+$final->id = 32;
+echo "ID = " . $final->id;
+$final->MethodTwo();

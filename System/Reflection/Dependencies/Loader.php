@@ -28,7 +28,7 @@
 
 namespace System\Reflection\Dependencies;
 
-function InitializePartialLoader() : bool
+function InitializePartialLoader(): bool
 {
       $libs = array(
             __DIR__ . "/../../Attributes/PartialsAttributes.php",
@@ -40,7 +40,7 @@ function InitializePartialLoader() : bool
             __DIR__ . "/PartialElementsCollection.php"
       );
 
-      foreach($libs as $lib)
+      foreach ($libs as $lib)
             if (!in_array($lib, get_included_files()))
                   Loader::StandardPHP_LoadDependency($lib);
 
@@ -82,7 +82,7 @@ final class Loader
             Loader::$log_active = $active;
       }
 
-      public static function GetLog() : array
+      public static function GetLog(): array
       {
             return Loader::$log;
       }
@@ -94,7 +94,19 @@ final class Loader
                   || str_ends_with($fullPath, Loader::IndexFileName)
                   || str_ends_with($fullPath, Loader::PartialsAttributesFileName)
                   || (str_replace("/", "\\", $fullPath) == __FILE__)
-                  || in_array($fullPath, Loader::$ignoredPath, true));
+                  || Loader::isIgnored($fullPath));
+      }
+
+      private static function isIgnored($path): bool
+      {
+            foreach (Loader::$ignoredPath as $ignored)
+                  if (
+                        str_replace("/", "\\", $path) ==
+                        str_replace("/", "\\", $ignored)
+                  )
+                  return true;
+
+            return false;
       }
 
       private static function InitializeLoadingValues()
@@ -108,9 +120,12 @@ final class Loader
             Loader::$Counter = 0;
       }
 
-      public static function Load(mixed $included, int $maxTemptatives = 1,
-            $php_as_partial = false, mixed $ignored = array())
-      {
+      public static function Load(
+            mixed $included,
+            int $maxTemptatives = 1,
+            $php_as_partial = false,
+            mixed $ignored = array()
+      ) {
             Loader::InitializeLoadingValues();
 
             Loader::$php_as_partial = $php_as_partial;
@@ -128,12 +143,18 @@ final class Loader
 
       public static function AddIgnorePath(mixed $paths)
       {
-            array_push(Loader::$ignoredPath, $paths);
+            if (gettype($paths) == "array")
+                  Loader::$ignoredPath = array_merge(Loader::$ignoredPath, $paths);
+            else
+                  array_push(Loader::$ignoredPath, $paths);
       }
 
       public static function AddIncludePath(mixed $paths)
       {
-            array_push(Loader::$includedPath, $paths);
+            if (gettype($paths) == "array")
+                  Loader::$includedPath = array_merge(Loader::$includedPath, $paths);
+            else
+                  array_push(Loader::$includedPath, $paths);
       }
 
       private static function LoadFromPathString(string $path, int $maxTemptatives = 1)
@@ -198,13 +219,15 @@ final class Loader
       private static function LoadPartialElement(PartialElementsCollection $partialsCollection)
       {
             if (Loader::$log_active) Loader::AddToLog(
-                  str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad));
+                  str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad)
+            );
 
             if ($partialsCollection->CompilePartials())
                   Loader::$Counter++;
 
             if (Loader::$log_active) Loader::AddToLog(
-                  str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad));
+                  str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad)
+            );
       }
 
       private static function PartialPHP_AddToCollection(
@@ -231,12 +254,14 @@ final class Loader
             for ($index = 0; $index < count(Loader::$dependants); $index++) {
                   try {
                         if (Loader::$log_active) Loader::AddToLog(
-                              str_replace('{0}', Loader::$dependants[$index], PartialMessages::LogAddPreLoad));
+                              str_replace('{0}', Loader::$dependants[$index], PartialMessages::LogAddPreLoad)
+                        );
 
                         Loader::StandardPHP_LoadDependency(Loader::$dependants[$index]);
 
                         if (Loader::$log_active) Loader::AddToLog(
-                              str_replace('{0}', Loader::$dependants[$index], PartialMessages::LogAddPostLoad));
+                              str_replace('{0}', Loader::$dependants[$index], PartialMessages::LogAddPostLoad)
+                        );
 
                         array_push(Loader::$dependants_Loaded, $index);
                   } catch (\Error $e) {
@@ -257,12 +282,14 @@ final class Loader
       {
             try {
                   if (Loader::$log_active) Loader::AddToLog(
-                        str_replace('{0}', $path, PartialMessages::LogAddPreLoad));
+                        str_replace('{0}', $path, PartialMessages::LogAddPreLoad)
+                  );
 
                   Loader::StandardPHP_LoadDependency($path);
 
                   if (Loader::$log_active) Loader::AddToLog(
-                        str_replace('{0}', $path, PartialMessages::LogAddPostLoad));
+                        str_replace('{0}', $path, PartialMessages::LogAddPostLoad)
+                  );
 
                   return true;
             } catch (\Error $e) {
@@ -277,13 +304,12 @@ final class Loader
                   : "";
       }
 
-      public static function StandardPHP_LoadDependency($path) : bool
+      public static function StandardPHP_LoadDependency($path): bool
       {
             if (!in_array(
                   str_replace('/', '\\', $path),
                   get_included_files()
-            ))
-            {
+            )) {
                   require $path;
                   return true;
             }
