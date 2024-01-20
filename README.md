@@ -20,6 +20,8 @@ Actually tested on PHP from 7.1.* to 8.3.*
  2. Conversion Enum files for PHP >= 8.1 to Abstract class files for PHP >= 7.1
  3. Fix exception on Composer Update (Tested with Symfony and Laravel project)
  4. Integrate array path for loading and ignored function
+ 5. Implement a fluent class for load partial OOP
+ 6. Implement log possibilities
 
 ## 🧙‍♂️ Loader (main method)
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
@@ -163,44 +165,45 @@ Now define the OOP file as partial with using Partial attribute like this :
 
 ## All Loader Methods
 ⚓ Load method :\
-    ℹ️ Main OOP loading method, it can call directly.\
-    ✏️ included : Specify path(s) who must be load - Can take string or string array - No default value, Required\
-    ✏️ maxTemptatives : Specify the number of loading temptatives - int - default value is 1\
-    ✏️ php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False\
-    ✏️ ignored : Specify path(s) who must be ignored during the loading - Can take string or string array - default value is an empty array\
+>ℹ️ Main OOP loading method, it can call directly.\
+>✏️ included : Specify path(s) who must be load - Can take string or string array - No default value, Required\
+>✏️ maxTemptatives : Specify the number of loading temptatives - int - default value is 1\
+>✏️ php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False\
+>✏️ ignored : Specify path(s) who must be ignored during the loading - Can take string or string array - default value is an empty array\
 
 ⚓ LoadStoredPaths method :\
-    ℹ️ This method try to load OOP paths that specify with Load method or AddIncludePath\
-    ✏️ maxTemptatives : Specify the number of loading temptatives - int - default value is 1\
+>ℹ️ This method try to load OOP paths that specify with Load method or AddIncludePath\
+>✏️ maxTemptatives : Specify the number of loading temptatives - int - default value is 1\
 
 ⚓ AddIncludePath method :\
-    ℹ️ This method add OOP paths for Loading. It use before call LoadStoredPaths method\
-    ✏️ paths : Specify path(s) who must be load - Can take string or string array - No default value, Required\
+>ℹ️ This method add OOP paths for Loading. It use before call LoadStoredPaths method\
+>✏️ paths : Specify path(s) who must be load - Can take string or string array - No default value, Required\
 
 ⚓ AddIgnorePath method :\
-    ℹ️ This method add OOP paths who must be ignore during Loading. It use before call LoadStoredPaths method\
-    ✏️ paths : Specify path(s) who must be load - Can take string or string array - No default value, Required\
+>ℹ️ This method add OOP paths who must be ignore during Loading. It use before call LoadStoredPaths method\
+>✏️ paths : Specify path(s) who must be load - Can take string or string array - No default value, Required\
 
 ⚓ StandardPHP_LoadDependency method :\
-    ℹ️ This method try to load as 'require' a specific php file path\
-    ✏️ paths : Specify path who must be load - String - No default value, Required\
+>ℹ️ This method try to load as 'require' a specific php file path\
+>✏️ paths : Specify path who must be load - String - No default value, Required\
 
 ⚓ Clear method :\
-    ℹ️ This method clear Loader parameters\
+>ℹ️ This method clear Loader parameters\
 
 ⚓ GetLastDependenciesCount method :\
-    ℹ️ This method return dependencies who were well loaded\
+>ℹ️ This method return dependencies who were well loaded\
 
 ⚓ SetLogActivation method :\
-    ℹ️ This method specify if Loader use a log during loading\
-    ✏️ active : Boolean - No default value, Required\
+>ℹ️ This method specify if Loader use a log during loading\
+>✏️ active : Boolean - No default value, Required\
 
 ⚓ GetLog method :\
-    ℹ️ This method return string array about log events\
+>ℹ️ This method return string array about log events\
 
 ## Possible exceptions
-It's possible to have compilation exception during a composer update like this :
+⚠️ Name is allready in use\
+It's possible to have compilation exception during a composer update like this :\
 
 [![Composer-Exception.png](https://i.postimg.cc/WzsPyvS2/Composer-Exception.png)](https://postimg.cc/MM34cgh4)
 
-To solve that, please use partial_php extension for your partial files and use the Firstruner Framework Loader for load these partial files
+➡️ To solve that, please use partial_php extension for your partial files and use the Firstruner Framework Loader for load these partial files
