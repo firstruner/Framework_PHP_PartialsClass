@@ -10,15 +10,16 @@ To use, it's very simple !
 ## ⚗️ PHP version
 Actually tested on PHP from 7.1.* to 8.3.*
 
-## Partials version
-
-🌞 v1.0 Initial repository
-🌞 v1.1 Uses, inheritance and implementations support
-🌞 v1.2 Final and Abstract support for classes
-💫 v2.0 🎇 Features :
+## Partials versions
+\
+🌞 v1.0 Initial repository\
+🌞 v1.1 Uses, inheritance and implementations support\
+🌞 v1.2 Final and Abstract support for classes\
+💫 v2.0 🎇 Features :\
  1. Interfaces, Enumerations and Trait support
  2. Conversion Enum files for PHP >= 8.1 to Abstract class files for PHP >= 7.1
  3. Fix exception on Composer Update (Tested with Symfony and Laravel project)
+ 4. Integrate array path for loading and ignored function
 
 ## 🧙‍♂️ Loader
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
@@ -31,6 +32,10 @@ Create a folder that contains all of your POO Objects (classes, interfaces, enum
     
     // Load all php POO files in "System" Folder
     Loader::Load(__DIR__ . '/System');
+
+Load function of Loader class can take in 1st argument a single string or an array of string,\
+
+The 4th argument is also take a single string or an array of string to ignore some path in the path scanned. Ignored paths must be a physic path like : c:\httpserver\htdocs\myproject\classes\ingoredClasses
 
 ## Notes
 👉 Loading note : it's recommended to load elements in this ordre :

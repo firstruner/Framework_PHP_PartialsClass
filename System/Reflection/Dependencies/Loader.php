@@ -57,6 +57,7 @@ final class Loader
       private static array $dependants_Loaded = array();
       private static int $Counter = 0;
       private static bool $php_as_partial = false;
+      private static array $ignoredPath = array();
 
       private const IndexFileName = "index.php";
       private const PartialsAttributesFileName = "PartialsAttributes.php";
@@ -75,15 +76,38 @@ final class Loader
                   || str_ends_with($fullPath, '..')
                   || str_ends_with($fullPath, Loader::IndexFileName)
                   || str_ends_with($fullPath, Loader::PartialsAttributesFileName)
-                  || (str_replace("/", "\\", $fullPath) == __FILE__));
+                  || (str_replace("/", "\\", $fullPath) == __FILE__)
+                  || in_array($fullPath, Loader::$ignoredPath, true));
       }
 
-      public static function Load(string $path, int $maxTemptatives = 1, $php_as_partial = false)
+      public static function Load(mixed $paths, int $maxTemptatives = 1,
+            $php_as_partial = false, mixed $ignored = array())
+      {
+            Loader::$php_as_partial = $php_as_partial;
+            Loader::$ignoredPath = (gettype($ignored) == "string"
+                  ? array($ignored)
+                  : $ignored);
+
+            if (gettype($paths) == "string")
+            {
+                  Loader::LoadFromPathString($paths, $maxTemptatives);
+            }
+            else if (gettype($paths) == "array")
+            {
+                  Loader::LoadFromPathStringArray($paths, $maxTemptatives);
+            }
+      }
+
+      private static function LoadFromPathStringArray(array $pathArray, int $maxTemptatives = 1)
+      {
+            foreach ($pathArray as $path)
+                  Loader::LoadFromPathString($path, $maxTemptatives);
+      }
+
+      private static function LoadFromPathString(string $path, int $maxTemptatives = 1)
       {
             Loader::$Counter = 0;
             Loader::$dependants = array();
-            Loader::$dependants_Loaded = array();
-            Loader::$php_as_partial = $php_as_partial;
 
             // Main load
             Loader::$dependants = Loader::LoadFromPath($path);
