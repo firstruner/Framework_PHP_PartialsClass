@@ -79,6 +79,13 @@ final class PartialElementsCollection implements Iterator
             return count($this->elements);
       }
 
+      public function GetElementName() : string
+      {
+            if ($this->count() == 0) return "no elements in collection";
+
+            return $this->elements[0]->GetCommonName();
+      }
+
       private function extendsCompiler(int $compileType, $currentContent, $partial): string
       {
             $incorpoElement = "";

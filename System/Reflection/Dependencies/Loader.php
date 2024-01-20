@@ -28,7 +28,7 @@
 
 namespace System\Reflection\Dependencies;
 
-function InitialLoader() : bool
+function InitializePartialLoader() : bool
 {
       if (in_array(__FILE__, get_included_files()))
             return true;
@@ -49,7 +49,7 @@ function InitialLoader() : bool
       return true;
 }
 
-InitialLoader();
+InitializePartialLoader();
 
 final class Loader
 {
@@ -58,6 +58,9 @@ final class Loader
       private static int $Counter = 0;
       private static bool $php_as_partial = false;
       private static array $ignoredPath = array();
+      private static array $includedPath = array();
+      private static bool $log_active = false;
+      private static array $log = array();
 
       private const IndexFileName = "index.php";
       private const PartialsAttributesFileName = "PartialsAttributes.php";
@@ -70,6 +73,22 @@ final class Loader
             return Loader::$Counter;
       }
 
+      public static function Clear()
+      {
+            Loader::InitializeLoadingValues();
+            Loader::$php_as_partial = false;
+      }
+
+      public static function SetLogActivation(bool $active)
+      {
+            Loader::$log_active = $active;
+      }
+
+      public static function GetLog() : array
+      {
+            return Loader::$log;
+      }
+
       private static function IsNotLoadable(string $fullPath)
       {
             return (str_ends_with($fullPath, '.')
@@ -80,28 +99,43 @@ final class Loader
                   || in_array($fullPath, Loader::$ignoredPath, true));
       }
 
-      public static function Load(mixed $paths, int $maxTemptatives = 1,
-            $php_as_partial = false, mixed $ignored = array())
+      private static function InitializeLoadingValues()
       {
-            Loader::$php_as_partial = $php_as_partial;
-            Loader::$ignoredPath = (gettype($ignored) == "string"
-                  ? array($ignored)
-                  : $ignored);
-
-            if (gettype($paths) == "string")
-            {
-                  Loader::LoadFromPathString($paths, $maxTemptatives);
-            }
-            else if (gettype($paths) == "array")
-            {
-                  Loader::LoadFromPathStringArray($paths, $maxTemptatives);
-            }
+            Loader::$ignoredPath = array();
+            Loader::$includedPath = array();
+            Loader::$log_active = false;
+            Loader::$log = array();
+            Loader::$dependants = array();
+            Loader::$dependants_Loaded = array();
+            Loader::$Counter = 0;
       }
 
-      private static function LoadFromPathStringArray(array $pathArray, int $maxTemptatives = 1)
+      public static function Load(mixed $included, int $maxTemptatives = 1,
+            $php_as_partial = false, mixed $ignored = array())
       {
-            foreach ($pathArray as $path)
+            Loader::InitializeLoadingValues();
+
+            Loader::$php_as_partial = $php_as_partial;
+            Loader::AddIgnorePath($ignored);
+            Loader::AddIncludePath($included);
+
+            Loader::LoadStoredPaths($maxTemptatives);
+      }
+
+      public static function LoadStoredPaths(int $maxTemptatives = 1)
+      {
+            foreach (Loader::$includedPath as $path)
                   Loader::LoadFromPathString($path, $maxTemptatives);
+      }
+
+      public static function AddIgnorePath(mixed $paths)
+      {
+            array_push(Loader::$ignoredPath, $paths);
+      }
+
+      public static function AddIncludePath(mixed $paths)
+      {
+            array_push(Loader::$includedPath, $paths);
       }
 
       private static function LoadFromPathString(string $path, int $maxTemptatives = 1)
@@ -158,8 +192,14 @@ final class Loader
             }
 
             if ($partialsCollection->count() > 0) {
+                  if (Loader::$log_active) Loader::AddToLog(
+                        str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad));
+
                   if ($partialsCollection->CompilePartials())
                         Loader::$Counter++;
+
+                  if (Loader::$log_active) Loader::AddToLog(
+                        str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad));
             }
 
             return $dependants;
@@ -188,10 +228,17 @@ final class Loader
       {
             for ($index = 0; $index < count(Loader::$dependants); $index++) {
                   try {
+                        if (Loader::$log_active) Loader::AddToLog(
+                              str_replace('{0}', Loader::$dependants[$index], PartialMessages::LogAddPreLoad));
+
                         Loader::StandardPHP_LoadDependency(Loader::$dependants[$index]);
+
+                        if (Loader::$log_active) Loader::AddToLog(
+                              str_replace('{0}', Loader::$dependants[$index], PartialMessages::LogAddPostLoad));
 
                         array_push(Loader::$dependants_Loaded, $index);
                   } catch (\Error $e) {
+                        if (Loader::$log_active) Loader::AddToLog($e->getMessage());
                   }
             }
       }
@@ -207,7 +254,13 @@ final class Loader
       private static function StandardPHP_LoadFile($path): bool
       {
             try {
+                  if (Loader::$log_active) Loader::AddToLog(
+                        str_replace('{0}', $path, PartialMessages::LogAddPreLoad));
+
                   Loader::StandardPHP_LoadDependency($path);
+
+                  if (Loader::$log_active) Loader::AddToLog(
+                        str_replace('{0}', $path, PartialMessages::LogAddPostLoad));
 
                   return true;
             } catch (\Error $e) {
@@ -234,5 +287,10 @@ final class Loader
             }
 
             return false;
+      }
+
+      private static function AddToLog(string $message)
+      {
+            array_push(Loader::$log, $message);
       }
 }

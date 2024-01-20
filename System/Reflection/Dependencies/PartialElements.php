@@ -171,6 +171,11 @@ final class PartialElements
             return "";
       }
 
+      public function GetCommonName() : string
+      {
+            return $this->ElementName;
+      }
+
       private function getInheritsNames(string $headers): string
       {
             $extendsPattern = "/\bextends\s+([\\a-zA-Z0-9_\\\\]+)/";

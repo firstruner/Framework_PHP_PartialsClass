@@ -33,4 +33,6 @@ abstract class PartialMessages
       const ExceptionOnLoading = "Error when loading partials class file";
       const ExceptionOnFinalAndAbstractClass = "Class cannot be final and abstract both";
       const ExceptionOnFinalOrAbstractObject = "Object cannot be final or abstract";
+      const LogAddPreLoad = "Load '{0}' file(s)";
+      const LogAddPostLoad = "File(s) '{0}' is/are load";
 }
