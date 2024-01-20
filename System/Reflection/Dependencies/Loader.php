@@ -189,18 +189,22 @@ final class Loader
                   }
             }
 
-            if ($partialsCollection->count() > 0) {
-                  if (Loader::$log_active) Loader::AddToLog(
-                        str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad));
-
-                  if ($partialsCollection->CompilePartials())
-                        Loader::$Counter++;
-
-                  if (Loader::$log_active) Loader::AddToLog(
-                        str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad));
-            }
+            if ($partialsCollection->count() > 0)
+                  Loader::LoadPartialElement($partialsCollection);
 
             return $dependants;
+      }
+
+      private static function LoadPartialElement(PartialElementsCollection $partialsCollection)
+      {
+            if (Loader::$log_active) Loader::AddToLog(
+                  str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad));
+
+            if ($partialsCollection->CompilePartials())
+                  Loader::$Counter++;
+
+            if (Loader::$log_active) Loader::AddToLog(
+                  str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad));
       }
 
       private static function PartialPHP_AddToCollection(

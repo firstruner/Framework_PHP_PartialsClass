@@ -176,6 +176,11 @@ final class PartialElements
             return $this->ElementName;
       }
 
+      public function GetFullName() : string
+      {
+            return $this->Namespace . "\\" . $this->ElementName;
+      }
+
       private function getInheritsNames(string $headers): string
       {
             $extendsPattern = "/\bextends\s+([\\a-zA-Z0-9_\\\\]+)/";

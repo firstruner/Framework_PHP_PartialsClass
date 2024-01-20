@@ -9,6 +9,7 @@ require __DIR__ . '/System/Reflection/Dependencies/FluentLoader.php';
 // For multiple use of Loader class
 use System\Reflection\Dependencies\Loader;
 
+Loader::SetLogActivation(true);
 // Load all php standard POO files in "System" folder
 Loader::Load(__DIR__ . '/System', php_as_partial: true);
 
@@ -16,7 +17,7 @@ Loader::Load(__DIR__ . '/System', php_as_partial: true);
 Loader::Load(__DIR__ . '/Samples_Interfaces', php_as_partial: true);
 
 // Load partial samples classes
-Loader::Load(__DIR__ . '/test', php_as_partial: true);
+Loader::Load(__DIR__ . '/test/Class/Simple', php_as_partial: true);
 
 // Consume partial class
 echo '--- Use Class ---' . PHP_EOL;
@@ -28,3 +29,9 @@ $obj->PrintInstanceMessage();
 // Consume a static method in same class object
 echo PHP_EOL;
 Samples\Class\Simple::PrintStaticMessage();
+
+Loader::AddIncludePath(__DIR__ . '/test/Class/Final');
+Loader::LoadStoredPaths();
+
+$final = new Samples\Class\FinalClass();
+$obj->PrintInstanceMessage();

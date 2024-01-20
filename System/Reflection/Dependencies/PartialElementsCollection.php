@@ -30,6 +30,7 @@ namespace System\Reflection\Dependencies;
 
 use Exception;
 use Iterator;
+use Random\BrokenRandomEngineError;
 use System\Environment\PHP;
 
 final class PartialElementsCollection implements Iterator
@@ -214,17 +215,21 @@ final class PartialElementsCollection implements Iterator
                   $ElementName,
                   $Extends,
                   $Implements,
-                  $Contents
+                  $Contents,
+                  $this->elements[0]->GetFullName(),
+                  $this->elements[0]->getObjectType()
             );
       }
 
       private function AssemblyAndEvaluate(
-            $Namespace,
-            $Uses,
-            $ElementName,
-            $Extends,
-            $Implements,
-            $Contents
+            string $Namespace,
+            string $Uses,
+            string $ElementName,
+            string $Extends,
+            string $Implements,
+            string $Contents,
+            string $OOPFullName,
+            string $ElementType
       ): bool {
             $finalClass =
                   $Namespace . PHP_EOL .
@@ -233,6 +238,24 @@ final class PartialElementsCollection implements Iterator
                   "{" . PHP_EOL . $Contents . PHP_EOL . "}";
 
             try {
+                  switch ($ElementType)
+                  {
+                        case PartialEnumerations_ObjectType::_Class:
+                              if (class_exists($OOPFullName)) return true;
+                              break;
+                        case PartialEnumerations_ObjectType::_Enumeration:
+                              if (enum_exists($OOPFullName)) return true;
+                              break;
+                        case PartialEnumerations_ObjectType::_Interface:
+                              if (interface_exists($OOPFullName)) return true;
+                              break;
+                        case PartialEnumerations_ObjectType::_Trait:
+                              if (trait_exists($OOPFullName)) return true;
+                              break;
+                        default:
+                              break;
+                  }
+
                   eval($finalClass);
                   return true;
             } catch (\Error $e) {
