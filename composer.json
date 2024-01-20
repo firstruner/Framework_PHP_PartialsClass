@@ -1,0 +1,14 @@
+{
+    "name": "firstruner/partials",
+    "description": "Allow to use partial files in php very simply",
+    "type": "library",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Firstruner",
+            "email": "contact@firstruner.fr"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}

@@ -30,9 +30,6 @@ namespace System\Reflection\Dependencies;
 
 function InitializePartialLoader() : bool
 {
-      if (in_array(__FILE__, get_included_files()))
-            return true;
-
       $libs = array(
             __DIR__ . "/../../Attributes/PartialsAttributes.php",
             __DIR__ . "/../../Environment/PHP.php",
@@ -44,7 +41,8 @@ function InitializePartialLoader() : bool
       );
 
       foreach($libs as $lib)
-            Loader::StandardPHP_LoadDependency($lib);
+            if (!in_array($lib, get_included_files()))
+                  Loader::StandardPHP_LoadDependency($lib);
 
       return true;
 }
