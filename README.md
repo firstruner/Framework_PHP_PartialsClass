@@ -22,7 +22,7 @@ Actually tested on PHP from 7.1.* to 8.3.*
  4. Integrate array path for loading and ignored function
  5. Implement a fluent class for load partial OOP
  6. Implement log possibilities
- 7. Implement log possibilities
+ 7. Implement delayed loading possibilities
 
 ## 🧙‍♂️ Loader (main method)
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
