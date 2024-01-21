@@ -90,6 +90,15 @@ Now define the OOP file as partial with using Partial attribute like this :
 
     #[Partial]
 
+#### Delayed loading
+If you need to load OOP file later, you can specify the element with "delayedLoading" at True, like this :\
+
+    #[Partial(true)]
+    Or
+    #[Partial(delayedLoading: true)]
+
+For load delayed elements, use "LoadStoredPaths" method or specify at True "loadDelayedElements" argument on "Load" method
+
 #### 📚 Full main partial sample
 
     <?php
