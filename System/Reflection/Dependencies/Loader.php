@@ -160,6 +160,9 @@ final class Loader
             Loader::AddIncludePath($included);
 
             Loader::LoadAllElements($maxTemptatives, $loadDelayedElements, $objectType);
+
+            if ($loadDelayedElements == PartialEnumerations_DelayedMode::OnPost)
+                  Loader::LoadDelayedElements($php_as_partial, $objectType);
       }
 
       /**

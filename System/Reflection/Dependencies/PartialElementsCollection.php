@@ -202,6 +202,8 @@ final class PartialElementsCollection implements Iterator
 
             if ((($loadDelayedElements == PartialEnumerations_DelayedMode::Without)
                   && $this->isDelayedElement())
+                  || (($loadDelayedElements == PartialEnumerations_DelayedMode::OnPost)
+                  && $this->isDelayedElement())
                   || (($loadDelayedElements == PartialEnumerations_DelayedMode::OnlyDelayed)
                   && !$this->isDelayedElement()))
                   return true;

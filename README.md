@@ -182,7 +182,8 @@ For load delayed elements, use "LoadStoredPaths" method or specify at True "load
 >✏️ maxTemptatives : Specify the number of loading temptatives - int - default value is 1\
 >✏️ php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False\
 >✏️ ignored : Specify path(s) who must be ignored during the loading - Can take string or string array - default value is an empty array\
->✏️ loadDelayedElements : Specify if the loader load partial class that specified as delayedLoading at True - Boolean - default value is False\
+>✏️ loadDelayedElements : Specify if the loader load partial class that specified as "delayedLoading" at True - Boolean - default value is Without\
+>    OnPost work similar than Without but force loading after non delayed\
 >✏️ loadDelayedElements : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All\
 
 ⚓ LoadStoredPaths method :\
@@ -208,6 +209,11 @@ For load delayed elements, use "LoadStoredPaths" method or specify at True "load
 >ℹ️ This method try to load as 'require' a specific php file path\
 >✏️ paths : Specify path who must be load - String - No default value, Required\
 >🔔 Only available from static class - work also when FluentClass is consume
+
+⚓ SetObjectTypeFilter method :\
+>ℹ️ This method defun filter loader\
+>✏️ objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::None, Required\
+>🔔 Only available from fluent class
 
 ⚓ Clear method :\
 >ℹ️ This method clear Loader parameters\
