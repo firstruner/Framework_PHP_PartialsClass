@@ -33,4 +33,5 @@ abstract class PartialEnumerations_DelayedMode
       public const Without = 0;
       public const With = 1;
       public const OnlyDelayed = 2;
+      public const OnPost = 4;
 }
