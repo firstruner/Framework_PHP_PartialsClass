@@ -22,6 +22,7 @@ Actually tested on PHP from 7.1.* to 8.3.*
  4. Integrate array path for loading and ignored function
  5. Implement a fluent class for load partial OOP
  6. Implement log possibilities
+ 7. Implement log possibilities
 
 ## 🧙‍♂️ Loader (main method)
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
@@ -172,6 +173,7 @@ Now define the OOP file as partial with using Partial attribute like this :
 >✏️ maxTemptatives : Specify the number of loading temptatives - int - default value is 1\
 >✏️ php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False\
 >✏️ ignored : Specify path(s) who must be ignored during the loading - Can take string or string array - default value is an empty array\
+>✏️ loadDelayedElements : Specify if the loader load partial class that specified as delayedLoading at True - Boolean - default value is False\
 
 ⚓ LoadStoredPaths method :\
 >ℹ️ This method try to load OOP paths that specify with Load method or AddIncludePath\

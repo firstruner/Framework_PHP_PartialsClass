@@ -30,7 +30,7 @@ namespace Samples\Class;
 
 use System\Attributes\Partial;
 
-#[Partial]
+#[Partial(true)]
 class Simple
 {
       public static function PrintStaticMessage()

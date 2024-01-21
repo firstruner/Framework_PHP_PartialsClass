@@ -33,4 +33,9 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS)]
 final class Partial
 {
+      public bool $delayedLoading = false;
+
+      public function __construct(bool $delayedLoading = false) {
+            $this->delayedLoading = $delayedLoading;
+        }
 }

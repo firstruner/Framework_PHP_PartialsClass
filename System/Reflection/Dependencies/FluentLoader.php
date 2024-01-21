@@ -60,9 +60,10 @@ final class FluentLoader
       }
 
       public function Load(mixed $included, int $maxTemptatives = 1,
-            $php_as_partial = false, mixed $ignored = array()) : FluentLoader
+            bool $php_as_partial = false, mixed $ignored = array(),
+            bool $loadDelayedElements = false) : FluentLoader
       {
-            Loader::Load($included, $maxTemptatives, $php_as_partial, $ignored);
+            Loader::Load($included, $maxTemptatives, $php_as_partial, $ignored, $loadDelayedElements);
             return $this;
       }
 

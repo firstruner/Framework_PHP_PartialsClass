@@ -41,5 +41,6 @@ abstract class PartialConstants
       const Tag_Implements = "implements ";
       const Tag_Extends = "extends ";
       const Tag_Use = "use ";
-      const Partial_Attribute = "#" . "[Partial]";
+      const Partial_Attribute = "#" . "[Partial";
+      const Partial_Attribute_DelayedOption = "delayedLoading";
 }

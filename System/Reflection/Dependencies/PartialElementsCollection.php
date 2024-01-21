@@ -153,6 +153,14 @@ final class PartialElementsCollection implements Iterator
                         && (PHP::getCurrentVersion()["Minor"] < 1));
       }
 
+      private function isDelayedElement() : bool
+      {
+            foreach ($this->elements as $elem)
+                  if ($elem->DelayedLoading) return true;
+
+            return false;
+      }
+
       private function EnumClassHeaderAdapter(string $elementName) : string
       {
             preg_replace('/\s\s+/', ' ', $elementName);
@@ -181,9 +189,12 @@ final class PartialElementsCollection implements Iterator
             return $content;
       }
 
-      public function CompilePartials(): bool
+      public function CompilePartials(bool $loadDelayedElement = false): bool
       {
             $this->FinalAbstractRulesValids();
+
+            if (!$loadDelayedElement && $this->isDelayedElement())
+                  return true;
 
             $Namespace = PartialConstants::Tag_Namespace . $this->elements[0]->Namespace . ';' . PHP_EOL;
             $ElementName =

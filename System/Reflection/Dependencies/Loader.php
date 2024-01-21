@@ -127,25 +127,32 @@ final class Loader
             mixed $included,
             int $maxTemptatives = 1,
             bool $php_as_partial = false,
-            mixed $ignored = array()
+            mixed $ignored = array(),
+            bool $loadDelayedElements = false
       ) {
             Loader::InitializeLoadingValues();
-
             Loader::$php_as_partial = $php_as_partial;
+
             Loader::AddIgnorePath($ignored);
             Loader::AddIncludePath($included);
 
-            Loader::LoadStoredPaths($maxTemptatives, $php_as_partial);
+            Loader::LoadAllElements($maxTemptatives, $loadDelayedElements);
       }
 
-      public static function LoadStoredPaths(int $maxTemptatives = 1, bool $php_as_partial = false)
+      public static function LoadStoredPaths(int $maxTemptatives = 1,
+            bool $php_as_partial = false)
       {
             Loader::InitializeLoadingValues();
-
             Loader::$php_as_partial = $php_as_partial;
+       
+            Loader::LoadAllElements($maxTemptatives, true);
+      }
 
+      private static function LoadAllElements(int $maxTemptatives = 1,
+            bool $loadDelayedElements = false)
+      {
             foreach (Loader::$includedPath as $path)
-                  Loader::LoadFromPathString($path, $maxTemptatives);
+                  Loader::LoadFromPathString($path, $maxTemptatives, $loadDelayedElements);
       }
 
       public static function AddIgnorePath(mixed $paths)
@@ -168,13 +175,14 @@ final class Loader
                   array_push(Loader::$includedPath, $paths);
       }
 
-      private static function LoadFromPathString(string $path, int $maxTemptatives = 1)
+      private static function LoadFromPathString(string $path,
+            int $maxTemptatives = 1, bool $loadDelayedElements = false)
       {
             Loader::$Counter = 0;
             Loader::$dependants = array();
 
             // Main load
-            Loader::$dependants = Loader::LoadFromPath($path);
+            Loader::$dependants = Loader::LoadFromPath($path, $loadDelayedElements);
 
             for ($attempt = 0; $attempt < $maxTemptatives; $attempt++) {
                   if (count(Loader::$dependants) > 0)
@@ -184,7 +192,7 @@ final class Loader
             }
       }
 
-      private static function LoadFromPath(string $path): array
+      private static function LoadFromPath(string $path, bool $loadDelayedElements): array
       {
             $dependants = array();
 
@@ -216,24 +224,25 @@ final class Loader
                   } else if (is_dir($currentPath)) {
                         $dependants = array_merge(
                               $dependants,
-                              Loader::LoadFromPath($currentPath)
+                              Loader::LoadFromPath($currentPath, $loadDelayedElements)
                         );
                   }
             }
 
             if ($partialsCollection->count() > 0)
-                  Loader::LoadPartialElement($partialsCollection);
+                  Loader::LoadPartialElement($partialsCollection, $loadDelayedElements);
 
             return $dependants;
       }
 
-      private static function LoadPartialElement(PartialElementsCollection $partialsCollection)
+      private static function LoadPartialElement(PartialElementsCollection $partialsCollection,
+            bool $loadDelayedElements = false)
       {
             if (Loader::$log_active) Loader::AddToLog(
                   str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad)
             );
 
-            if ($partialsCollection->CompilePartials())
+            if ($partialsCollection->CompilePartials($loadDelayedElements))
                   Loader::$Counter++;
 
             if (Loader::$log_active) Loader::AddToLog(

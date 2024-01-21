@@ -37,6 +37,7 @@ final class PartialElements
       readonly string $Implements;
       readonly string $Content;
       readonly string $Tag_File;
+      readonly bool $DelayedLoading;
 
       public bool $isAbstract = false;
       public bool $isFinal = false;
@@ -49,12 +50,18 @@ final class PartialElements
       private const trait_Pattern = "/\btrait\s+([a-zA-Z0-9_-])+/";
       private const enum_Pattern = "/\benum\s+([a-zA-Z0-9_-])+/";
       private const empty_Pattern = "/\b([a-zA-Z0-9_-])+/";
+      private const delayed_Pattern = "/#{1}(\[){1}Partial\s*(\(){1}\s*(delayedLoading\:)*\s*true/";
+            //"/\b" . str_replace('[', '\[', PartialConstants::Partial_Attribute) . '/'; //.
+            //"\s*\(+\s*" . PartialConstants::Partial_Attribute_DelayedOption . "\s*[=]+\s*true/";*/
 
       function __construct(string $content, string $tagFile)
       {
             $this->Tag_File = $tagFile;
             $this->objectType = PartialEnumerations_ObjectType::_Other;
             $this->Content = $this->extractContents($content);
+            $this->DelayedLoading = (preg_match(
+                  $this::delayed_Pattern,
+                  $content) > 0);
 
             $this->detectClassHeaders(
                   substr(
