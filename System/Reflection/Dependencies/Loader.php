@@ -67,24 +67,36 @@ final class Loader
       private const PhpPartialExtension = "partial_php";
       private const PartialFileHeading = "// --- File : ";
 
+      /**
+       * Return count about last elements loaded
+       */
       public static function GetLastDependenciesCount(): int
       {
             Loader::InitializeLoadingValues();
             return Loader::$Counter;
       }
 
+      /**
+       * Clear the loader
+       */
       public static function Clear()
       {
             Loader::InitializeLoadingValues();
             Loader::$php_as_partial = false;
       }
 
+      /**
+       * Set log activation
+       */
       public static function SetLogActivation(bool $active)
       {
             Loader::InitializeLoadingValues();
             Loader::$log_active = $active;
       }
 
+      /**
+       * Return log contents
+       */
       public static function GetLog(): array
       {
             Loader::InitializeLoadingValues();
@@ -124,6 +136,15 @@ final class Loader
             if (!isset(Loader::$Counter)) Loader::$Counter = 0;
       }
 
+      /**
+       * Load elements
+       * @included : Specify path(s) who must be load - Can take string or string array - No default value, Required
+       * @maxTemptatives : Specify the number of loading temptatives - int - default value is 1
+       * @php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False
+       * @ignored : Specify path(s) who must be ignored during the loading - Can take string or string array - default value is an empty array
+       * @loadDelayedElements : Specify if the loader load partial class that specified as delayedLoading at True - Boolean - default value is False
+       * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
+       */
       public static function Load(
             mixed $included,
             int $maxTemptatives = 1,
@@ -141,6 +162,12 @@ final class Loader
             Loader::LoadAllElements($maxTemptatives, $loadDelayedElements, $objectType);
       }
 
+      /**
+       * This method try to load OOP paths that specify with Load method or AddIncludePath
+       * @maxTemptatives : Specify the number of loading temptatives - int - default value is 1
+       * @php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False
+       * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
+       */
       public static function LoadStoredPaths(int $maxTemptatives = 1,
             bool $php_as_partial = false,
             int $objectType = PartialEnumerations_ObjectType::All)
@@ -151,6 +178,11 @@ final class Loader
             Loader::LoadAllElements($maxTemptatives, PartialEnumerations_DelayedMode::With, $objectType);
       }
 
+      /**
+       * This method try to load OOP paths that is in delayed mode only
+       * @php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False
+       * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
+       */
       public static function LoadDelayedElements(bool $php_as_partial = false,
             int $objectType = PartialEnumerations_ObjectType::All)
       {
@@ -168,6 +200,10 @@ final class Loader
                   Loader::LoadFromPathString($path, $maxTemptatives, $loadDelayedElements, $objectType);
       }
 
+      /**
+       * Add_Ignoring_Path
+       * @paths : Specify path(s) who must be load - Can take string or string array - No default value, Required
+       */
       public static function AddIgnorePath(mixed $paths)
       {
             Loader::InitializeLoadingValues();
@@ -178,6 +214,10 @@ final class Loader
                   array_push(Loader::$ignoredPath, $paths);
       }
 
+      /**
+       * Add_Including_Path
+       * @paths : Specify path(s) who must be load - Can take string or string array - No default value, Required
+       */
       public static function AddIncludePath(mixed $paths)
       {
             Loader::InitializeLoadingValues();
@@ -353,6 +393,9 @@ final class Loader
                   : "";
       }
 
+      /**
+       * Try to load a standard PHP File
+       */
       public static function StandardPHP_LoadDependency($path): bool
       {
             Loader::InitializeLoadingValues();

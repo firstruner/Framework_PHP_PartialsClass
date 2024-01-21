@@ -51,8 +51,6 @@ final class PartialElements
       private const enum_Pattern = "/\benum\s+([a-zA-Z0-9_-])+/";
       private const empty_Pattern = "/\b([a-zA-Z0-9_-])+/";
       private const delayed_Pattern = "/#{1}(\[){1}Partial\s*(\(){1}\s*(delayedLoading\:)*\s*true/";
-            //"/\b" . str_replace('[', '\[', PartialConstants::Partial_Attribute) . '/'; //.
-            //"\s*\(+\s*" . PartialConstants::Partial_Attribute_DelayedOption . "\s*[=]+\s*true/";*/
 
       function __construct(string $content, string $tagFile)
       {

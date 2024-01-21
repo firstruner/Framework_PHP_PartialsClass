@@ -183,11 +183,18 @@ For load delayed elements, use "LoadStoredPaths" method or specify at True "load
 >✏️ php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False\
 >✏️ ignored : Specify path(s) who must be ignored during the loading - Can take string or string array - default value is an empty array\
 >✏️ loadDelayedElements : Specify if the loader load partial class that specified as delayedLoading at True - Boolean - default value is False\
+>✏️ loadDelayedElements : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All\
 
 ⚓ LoadStoredPaths method :\
 >ℹ️ This method try to load OOP paths that specify with Load method or AddIncludePath\
 >✏️ maxTemptatives : Specify the number of loading temptatives - int - default value is 1\
 >✏️ php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False\
+>✏️ loadDelayedElements : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All\
+
+⚓ LoadDelayedElements method :\
+>ℹ️ This method try to load OOP paths that is in delayed mode only\
+>✏️ php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False\
+>✏️ loadDelayedElements : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All\
 
 ⚓ AddIncludePath method :\
 >ℹ️ This method add OOP paths for Loading. It use before call LoadStoredPaths method\

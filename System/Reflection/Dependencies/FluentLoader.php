@@ -35,30 +35,53 @@ final class FluentLoader
             require_once 'Loader.php';
       }
 
+      /**
+       * Add_Including_Path
+       * @paths : Specify path(s) who must be load - Can take string or string array - No default value, Required
+       */
       public function Add_Including_Path(mixed $paths) : FluentLoader
       {
             Loader::AddIncludePath($paths);
             return $this;
       }
 
+      /**
+       * Add_Ignoring_Path
+       * @paths : Specify path(s) who must be load - Can take string or string array - No default value, Required
+       */
       public function Add_Ignoring_Path(mixed $paths) : FluentLoader
       {
             Loader::AddIgnorePath($paths);
             return $this;
       }
 
+      /**
+       * Clear the loader
+       */
       public function Clear() : FluentLoader
       {
             Loader::Clear();
             return $this;
       }
 
+      /**
+       * Set log activation
+       */
       public function SetLogActivation(bool $active) : FluentLoader
       {
             Loader::SetLogActivation($active);
             return $this;
       }
 
+      /**
+       * Load elements
+       * @included : Specify path(s) who must be load - Can take string or string array - No default value, Required
+       * @maxTemptatives : Specify the number of loading temptatives - int - default value is 1
+       * @php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False
+       * @ignored : Specify path(s) who must be ignored during the loading - Can take string or string array - default value is an empty array
+       * @loadDelayedElements : Specify if the loader load partial class that specified as delayedLoading at True - Boolean - default value is False
+       * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
+       */
       public function Load(mixed $included, int $maxTemptatives = 1,
             bool $php_as_partial = false, mixed $ignored = array(),
             bool $loadDelayedElements = false,
@@ -69,6 +92,12 @@ final class FluentLoader
             return $this;
       }
 
+      /**
+       * This method try to load OOP paths that specify with Load method or AddIncludePath
+       * @maxTemptatives : Specify the number of loading temptatives - int - default value is 1
+       * @php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False
+       * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
+       */
       public function LoadStoredPaths(
             int $maxTemptatives = 1, bool $php_as_partial = false,
             int $objectType = PartialEnumerations_ObjectType::All) : FluentLoader
@@ -77,6 +106,11 @@ final class FluentLoader
             return $this;
       }
 
+      /**
+       * This method try to load OOP paths that is in delayed mode only
+       * @php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False
+       * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
+       */
       public function LoadDelayedElements(bool $php_as_partial = false,
             int $objectType = PartialEnumerations_ObjectType::All) : FluentLoader
       {
