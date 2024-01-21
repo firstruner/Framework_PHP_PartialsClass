@@ -10,7 +10,7 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the proprietary License
+ * This source file is subject to the Freemium License
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to contact@firstruner.fr so we can send you a copy immediately.
@@ -120,7 +120,7 @@ final class Loader
                         str_replace("/", "\\", $path) ==
                         str_replace("/", "\\", $ignored)
                   )
-                        return true;
+                  return true;
 
             return false;
       }
@@ -168,14 +168,13 @@ final class Loader
        * @php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False
        * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
        */
-      public static function LoadStoredPaths(
-            int $maxTemptatives = 1,
+      public static function LoadStoredPaths(int $maxTemptatives = 1,
             bool $php_as_partial = false,
-            int $objectType = PartialEnumerations_ObjectType::All
-      ) {
+            int $objectType = PartialEnumerations_ObjectType::All)
+      {
             Loader::InitializeLoadingValues();
             Loader::$php_as_partial = $php_as_partial;
-
+       
             Loader::LoadAllElements($maxTemptatives, PartialEnumerations_DelayedMode::With, $objectType);
       }
 
@@ -184,21 +183,19 @@ final class Loader
        * @php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False
        * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
        */
-      public static function LoadDelayedElements(
-            bool $php_as_partial = false,
-            int $objectType = PartialEnumerations_ObjectType::All
-      ) {
+      public static function LoadDelayedElements(bool $php_as_partial = false,
+            int $objectType = PartialEnumerations_ObjectType::All)
+      {
             Loader::InitializeLoadingValues();
             Loader::$php_as_partial = $php_as_partial;
-
+       
             Loader::LoadAllElements(0, PartialEnumerations_DelayedMode::OnlyDelayed, $objectType);
       }
 
-      private static function LoadAllElements(
-            int $maxTemptatives = 1,
+      private static function LoadAllElements(int $maxTemptatives = 1,
             int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
-            int $objectType = PartialEnumerations_ObjectType::All
-      ) {
+            int $objectType = PartialEnumerations_ObjectType::All)
+      {
             foreach (Loader::$includedPath as $path)
                   Loader::LoadFromPathString($path, $maxTemptatives, $loadDelayedElements, $objectType);
       }
@@ -231,12 +228,10 @@ final class Loader
                   array_push(Loader::$includedPath, $paths);
       }
 
-      private static function LoadFromPathString(
-            string $path,
-            int $maxTemptatives = 1,
-            int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
-            int $objectType = PartialEnumerations_ObjectType::All
-      ) {
+      private static function LoadFromPathString(string $path,
+            int $maxTemptatives = 1, int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
+            int $objectType = PartialEnumerations_ObjectType::All)
+      {
             Loader::$Counter = 0;
             Loader::$dependants = array();
 
@@ -251,11 +246,10 @@ final class Loader
             }
       }
 
-      private static function LoadFromPath(
-            string $path,
+      private static function LoadFromPath(string $path, 
             int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
-            int $objectType = PartialEnumerations_ObjectType::All
-      ): array {
+            int $objectType = PartialEnumerations_ObjectType::All): array
+      {
             $dependants = array();
 
             $partialsCollection = new PartialElementsCollection();
@@ -297,11 +291,10 @@ final class Loader
             return $dependants;
       }
 
-      private static function LoadPartialElement(
-            PartialElementsCollection $partialsCollection,
+      private static function LoadPartialElement(PartialElementsCollection $partialsCollection,
             int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
-            int $objectType = PartialEnumerations_ObjectType::All
-      ) {
+            int $objectType = PartialEnumerations_ObjectType::All)
+      {
             if (Loader::$log_active) Loader::AddToLog(
                   str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad)
             );
@@ -337,7 +330,7 @@ final class Loader
       private static function StandardPHP_NewTemptative()
       {
             Loader::CheckPartialMessagesKeysLoaded();
-
+            
             for ($index = 0; $index < count(Loader::$dependants); $index++) {
                   try {
                         if (Loader::$log_active) Loader::AddToLog(

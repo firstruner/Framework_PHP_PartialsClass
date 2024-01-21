@@ -23,7 +23,6 @@ Actually tested on PHP from 7.1.* to 8.3.*
  5. Implement a fluent class for load partial OOP
  6. Implement log possibilities
  7. Implement delayed loading possibilities
- 8. Implement filter on partial element on loading
 
 ## 🧙‍♂️ Loader (main method)
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
@@ -209,6 +208,11 @@ For load delayed elements, use "LoadStoredPaths" method or specify at True "load
 >ℹ️ This method try to load as 'require' a specific php file path\
 >✏️ paths : Specify path who must be load - String - No default value, Required\
 >🔔 Only available from static class - work also when FluentClass is consume
+
+⚓ SetObjectTypeFilter method :\
+>ℹ️ This method defun filter loader\
+>✏️ objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::None, Required\
+>🔔 Only available from fluent class
 
 ⚓ Clear method :\
 >ℹ️ This method clear Loader parameters\

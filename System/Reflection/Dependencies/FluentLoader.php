@@ -30,9 +30,19 @@ namespace System\Reflection\Dependencies;
 
 final class FluentLoader
 {
+      private PartialEnumerations_ObjectType $objectTypeFilter = PartialEnumerations_ObjectType::None;
+
       function __construct()
       {
             require_once 'Loader.php';
+      }
+
+      /**
+       * Define filter about partial element find during the load
+       */
+      public function SetObjectTypeFilter(int $objectType)
+      {
+            $this->objectTypeFilter = $objectType;
       }
 
       /**
@@ -73,6 +83,18 @@ final class FluentLoader
             return $this;
       }
 
+      private function getFilter(int $objectType) : int
+      {
+            if ($this->objectTypeFilter == PartialEnumerations_ObjectType::None)
+                  return $objectType;
+
+            if (($objectType == PartialEnumerations_ObjectType::All)
+                  && ($this->objectTypeFilter != PartialEnumerations_ObjectType::None))
+                  return $this->objectTypeFilter;
+            
+            return $objectType;
+      }
+
       /**
        * Load elements
        * @included : Specify path(s) who must be load - Can take string or string array - No default value, Required
@@ -88,7 +110,8 @@ final class FluentLoader
             int $objectType = PartialEnumerations_ObjectType::All) : FluentLoader
       {
             Loader::Load($included, $maxTemptatives, $php_as_partial,
-                  $ignored, $loadDelayedElements, $objectType);
+                  $ignored, $loadDelayedElements,
+                  $this->getFilter($objectType));
             return $this;
       }
 
@@ -102,7 +125,8 @@ final class FluentLoader
             int $maxTemptatives = 1, bool $php_as_partial = false,
             int $objectType = PartialEnumerations_ObjectType::All) : FluentLoader
       {
-            Loader::LoadStoredPaths($maxTemptatives, $php_as_partial, $objectType);
+            Loader::LoadStoredPaths($maxTemptatives, $php_as_partial,
+                  $this->getFilter($objectType));
             return $this;
       }
 
@@ -114,7 +138,8 @@ final class FluentLoader
       public function LoadDelayedElements(bool $php_as_partial = false,
             int $objectType = PartialEnumerations_ObjectType::All) : FluentLoader
       {
-            Loader::LoadDelayedElements($php_as_partial, $objectType);
+            Loader::LoadDelayedElements($php_as_partial,
+                  $this->getFilter($objectType));
             return $this;
       }
 }
