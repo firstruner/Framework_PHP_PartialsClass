@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is a partial class sample
+ * This file is a part of Firstruner Framework for PHP
  */
 
 /**
@@ -26,15 +26,13 @@
  * @version 2.0.0
  */
 
-namespace Samples\Class;
+namespace System\Reflection\Dependencies;
 
-use System\Attributes\Partial;
-
-#[Partial]
-class MultiplesSimple
+abstract class PartialEnumerations_Element
 {
-      function __construct()
-      {
-            // This is a constructor
-      }
+      public const _Namespace = 1;
+      public const _Uses = 2;
+      public const _Class = 4;
+      public const _Extends = 8;
+      public const _Implements = 16;
 }

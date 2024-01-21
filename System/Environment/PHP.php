@@ -1,16 +1,12 @@
 <?php
 
 /**
- * This file is a partial class sample
- */
-
-/**
  * Copyright since 2024 Firstruner and Contributors
  * Firstruner is an Registered Trademark & Property of Christophe BOULAS
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the proprietary License
+ * This source file is subject to the Freemium License
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to contact@firstruner.fr so we can send you a copy immediately.
@@ -26,15 +22,16 @@
  * @version 2.0.0
  */
 
-namespace Samples\Class;
+namespace System\Environment;
 
-use System\Attributes\Partial;
-
-#[Partial]
-class MultiplesSimple
+class PHP
 {
-      function __construct()
+      public static function getCurrentVersion(): array
       {
-            // This is a constructor
+            return array(
+                  "Major" => PHP_MAJOR_VERSION,
+                  "Minor" => PHP_MINOR_VERSION,
+                  "Patch" => PHP_EXTRA_VERSION
+            );
       }
 }

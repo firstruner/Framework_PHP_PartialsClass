@@ -22,8 +22,8 @@
  *
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
- * @license   https://wikipedia.org/wiki/proprietary proprietary License
- * @version 1.2.0
+ * @license   https://wikipedia.org/wiki/Freemium Freemium License
+ * @version 2.0.0
  */
 
 namespace System\Reflection\Dependencies;
@@ -31,5 +31,8 @@ namespace System\Reflection\Dependencies;
 abstract class PartialMessages
 {
       const ExceptionOnLoading = "Error when loading partials class file";
-      const ExceptionOnFinalAndAbstract = "Class cannot be final and abstract both";
+      const ExceptionOnFinalAndAbstractClass = "Class cannot be final and abstract both";
+      const ExceptionOnFinalOrAbstractObject = "Object cannot be final or abstract";
+      const LogAddPreLoad = "Load '{0}' file(s)";
+      const LogAddPostLoad = "File(s) '{0}' is/are load";
 }

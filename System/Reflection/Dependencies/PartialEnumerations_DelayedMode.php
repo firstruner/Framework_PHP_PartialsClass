@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is a partial class sample
+ * This file is a part of Firstruner Framework for PHP
  */
 
 /**
@@ -10,7 +10,7 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the proprietary License
+ * This source file is subject to the Freemium License
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to contact@firstruner.fr so we can send you a copy immediately.
@@ -26,15 +26,11 @@
  * @version 2.0.0
  */
 
-namespace Samples\Class;
+namespace System\Reflection\Dependencies;
 
-use System\Attributes\Partial;
-
-#[Partial]
-class MultiplesSimple
+abstract class PartialEnumerations_DelayedMode
 {
-      function __construct()
-      {
-            // This is a constructor
-      }
+      public const Without = 0;
+      public const With = 1;
+      public const OnlyDelayed = 2;
 }

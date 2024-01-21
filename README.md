@@ -1,27 +1,64 @@
+
 # 🛠️ Framework PHP - Partials functions
-Part of Firstruner Framework for PHP to allow use Partial function with PHP class
+Part of Firstruner Framework for PHP to allow use Partial function with PHP OOP objects
 
 This project is a part of 🛠️ Firstruner Framework for PHP.
 It contains a little part of the original Framework that allow you to use "partial" DotNet functionality into PHP structure project and also naturally the Framework loader.
 
 To use, it's very simple !
 
-## PHP version
-⚗️ Actually tested on PHP from 7.1.* to 8.3.*
+## ⚗️ PHP version
+Actually tested on PHP from 7.1.* to 8.3.*
 
-## 🧙‍♂️ Loader
+## Partials versions
+\
+🌞 v1.0 Initial repository\
+🌞 v1.1 Uses, inheritance and implementations support\
+🌞 v1.2 Final and Abstract support for classes\
+💫 v2.0 🎇 Features :\
+ 1. Interfaces, Enumerations and Trait support
+ 2. Conversion Enum files for PHP >= 8.1 to Abstract class files for PHP >= 7.1
+ 3. Fix exception on Composer Update (Tested with Symfony and Laravel project)
+ 4. Integrate array path for loading and ignored function
+ 5. Implement a fluent class for load partial OOP
+ 6. Implement log possibilities
+ 7. Implement delayed loading possibilities
+ 8. Implement filter on partial element on loading
+
+## 🧙‍♂️ Loader (main method)
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
 
-    // The only required dependence for Firstruner Framework
-    require __DIR__ . '/System/Reflection/Dependencies.php';
+    // The only required dependence for use Loader of Firstruner Framework
+    require __DIR__ . '/System/Reflection/Dependencies/Loader.php';
     
     // For multiple use of Loader class
     use System\Reflection\Dependencies\Loader;
     
-    // Load all php POO files in "System" Folder
-    Loader::Load(__DIR__ . '/System');
+    // Load all php POO files in "MyOOP" Folder
+    Loader::Load(__DIR__ . '/MyOOP');
+
+🔰 Load function of Loader class can take in 1st argument a single string or an array of string,\
+
+🔰 The 4th argument is also take a single string or an array of string to ignore some path in the path scanned. Ignored paths must be a physic path like : c:\httpserver\htdocs\myproject\classes\ingoredClasses
+
+📓 For all other method, go to "All Loader Methods" at the bottom of this documentation 👇 or consult pdf include
+
+## 🧙‍♂️ Load with FluentLoader
+This Firstruner Framework contains also a partial loader which is can use in fluent mode.
+
+    // The only required dependence for use FluentLoader of Firstruner Framework
+    require __DIR__ . '/System/Reflection/Dependencies/FluentLoader.php';
+    
+    // For simplify usage of FluentLoader class
+    use System\Reflection\Dependencies\FluentLoader;
+    
+    // Load all php POO files in "MyOOP_Directory/Classes" and "MyOOP" Folders
+    $fluentLoader = new FluentLoader();
+    $fluentLoader->SetLogActivation(true)->Load("MyOOP_Directory/Classes")->SetLogActivation(false)->Add_Including_Path(__DIR__ . '/MyOOP')->LoadStoredPaths();
 
 ## Notes
+💡 Pay close attention to the loading order !
+
 👉 Loading note : it's recommended to load elements in this ordre :
  1. Enumerations
  2. Interfaces
@@ -30,24 +67,40 @@ Create a folder that contains all of your POO Objects (classes, interfaces, enum
 👉 File extension note : For standard use, partial file must have "partial_php" extension, but it's possible to use "php" extension if you specify "php_as_partial" attribute to "True" when "Load" method was called.
 But use "php" are more lazy because it necessary to load the php file before determine if the file is a partial file.
 
-## Class creation
-To create a class with partials files, create a folder for your class, and create all of your files inside.
+## Performances
+📈 For better performances, use partial_php extension for your files and DO NOT set php_as_partial argument in Load function as True.\
+\
+📈 It recommended if you have a project with multiple target to separate you partial classes of your projects
 
-### Define a class as partial
+## IDE integration
+### VS Code
+⚙️ Go in File menu > Preferences > Settings.\
+In "File editor" section, add "*.partial_php" use like "php" in file association item
+
+## How use Partials on OOP object
+💡 To create a php files with partials, create a folder for your OOP object, and create all of your files inside.
+
+### 👨‍🏭 Define a OOP file as partial
 #### Call attributes
-Define the file that is the main class file and call Partials attributes like this :
+To define the file as a partial file, you should reference Partials attributes like this :
 
     use System\Attributes\Partial;
 
-#### Define the partial class
-Now define the class as main partial class with using Partial attribute like this
+#### Define as partial file
+Now define the OOP file as partial with using Partial attribute like this :
 
     #[Partial]
 
-### Final and abstract classes
-🌞 Since the 1.2.* version, you can specify independently final or abstract by file
+#### Delayed loading
+If you need to load OOP file later, you can specify the element with "delayedLoading" at True, like this :\
 
-#### 📚 Full main partial class sample
+    #[Partial(true)]
+    Or
+    #[Partial(delayedLoading: true)]
+
+For load delayed elements, use "LoadStoredPaths" method or specify at True "loadDelayedElements" argument on "Load" method
+
+#### 📚 Full main partial sample
 
     <?php
     namespace System\Printers;
@@ -63,8 +116,7 @@ Now define the class as main partial class with using Partial attribute like thi
           }
     }
 
-## Uses, inheritance and implementations
-🌞 Since the 1.1.* version, you can specify independently inheritance and implementation by file
+### 🔎 Some samples are present in Samples folder
 
 ### 📚 Sample 1
 ##### 📗 File 1
@@ -79,7 +131,7 @@ Now define the class as main partial class with using Partial attribute like thi
     {
     }
 
-##### 📘 File 
+##### 📘 File 2
 
     namespace  System\Sample;
     
@@ -108,7 +160,7 @@ Now define the class as main partial class with using Partial attribute like thi
     {
     }
 
-##### 📘 File 
+##### 📘 File 2
 
     namespace  System\Sample;
     
@@ -124,6 +176,59 @@ Now define the class as main partial class with using Partial attribute like thi
     {
     }
 
-## 🎇 Features
-💫 "final" and "abstract" are present in release version : 1.2 !
-💫 next version v2.0 support partial interfaces, enumerations and traits (lol)
+## All Loader Methods available from Loader static class or from FluentLoader class
+⚓ Load method :\
+>ℹ️ Main OOP loading method, it can call directly.\
+>✏️ included : Specify path(s) who must be load - Can take string or string array - No default value, Required\
+>✏️ maxTemptatives : Specify the number of loading temptatives - int - default value is 1\
+>✏️ php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False\
+>✏️ ignored : Specify path(s) who must be ignored during the loading - Can take string or string array - default value is an empty array\
+>✏️ loadDelayedElements : Specify if the loader load partial class that specified as delayedLoading at True - Boolean - default value is False\
+>✏️ loadDelayedElements : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All\
+
+⚓ LoadStoredPaths method :\
+>ℹ️ This method try to load OOP paths that specify with Load method or AddIncludePath\
+>✏️ maxTemptatives : Specify the number of loading temptatives - int - default value is 1\
+>✏️ php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False\
+>✏️ loadDelayedElements : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All\
+
+⚓ LoadDelayedElements method :\
+>ℹ️ This method try to load OOP paths that is in delayed mode only\
+>✏️ php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False\
+>✏️ loadDelayedElements : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All\
+
+⚓ AddIncludePath method :\
+>ℹ️ This method add OOP paths for Loading. It use before call LoadStoredPaths method\
+>✏️ paths : Specify path(s) who must be load - Can take string or string array - No default value, Required\
+
+⚓ AddIgnorePath method :\
+>ℹ️ This method add OOP paths who must be ignore during Loading. It use before call LoadStoredPaths method\
+>✏️ paths : Specify path(s) who must be load - Can take string or string array - No default value, Required\
+
+⚓ StandardPHP_LoadDependency method :\
+>ℹ️ This method try to load as 'require' a specific php file path\
+>✏️ paths : Specify path who must be load - String - No default value, Required\
+>🔔 Only available from static class - work also when FluentClass is consume
+
+⚓ Clear method :\
+>ℹ️ This method clear Loader parameters\
+
+⚓ GetLastDependenciesCount method :\
+>ℹ️ This method return dependencies who were well loaded\
+>🔔 Only available from static class - work also when FluentClass is consume
+
+⚓ SetLogActivation method :\
+>ℹ️ This method specify if Loader use a log during loading\
+>✏️ active : Boolean - No default value, Required\
+
+⚓ GetLog method :\
+>ℹ️ This method return string array about log events\
+>🔔 Only available from static class - work also when FluentClass is consume
+
+## Possible exceptions
+⚠️ Name is allready in use\
+It's possible to have compilation exception during a composer update like this :\
+
+[![Composer-Exception.png](https://i.postimg.cc/WzsPyvS2/Composer-Exception.png)](https://postimg.cc/MM34cgh4)
+
+➡️ To solve that, please use partial_php extension for your partial files and use the Firstruner Framework Loader for load these partial files

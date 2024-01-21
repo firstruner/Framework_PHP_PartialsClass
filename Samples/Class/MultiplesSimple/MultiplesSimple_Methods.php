@@ -22,8 +22,8 @@
  *
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
- * @license   https://wikipedia.org/wiki/proprietary proprietary License
- * @version 1.2.0
+ * @license   https://wikipedia.org/wiki/Freemium Freemium License
+ * @version 2.0.0
  */
 
 namespace Samples\Class;

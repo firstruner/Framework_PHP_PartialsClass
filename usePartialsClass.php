@@ -22,8 +22,8 @@
  *
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
- * @license   https://wikipedia.org/wiki/proprietary proprietary License
- * @version 1.2.0
+ * @license   https://wikipedia.org/wiki/Freemium Freemium License
+ * @version 2.0.0
  */
 
 header("Content-Type: text/plain");
@@ -33,9 +33,6 @@ require __DIR__ . '/System/Reflection/Dependencies/Loader.php';
 
 // For multiple use of Loader class
 use System\Reflection\Dependencies\Loader;
-
-// Load all php standard POO files in "System" folder
-Loader::Load(__DIR__ . '/System', php_as_partial: true);
 
 // It's recommended to load interfaces before class
 Loader::Load(__DIR__ . '/Samples_Interfaces', php_as_partial: true);

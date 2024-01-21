@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is a part of Firstruner Framework for PHP
+ * This file is a partial interface sample
  */
 
 /**
@@ -10,7 +10,7 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the proprietary License
+ * This source file is subject to the Freemium License
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to contact@firstruner.fr so we can send you a copy immediately.
@@ -22,17 +22,18 @@
  *
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
- * @license   https://wikipedia.org/wiki/proprietary proprietary License
- * @version 1.2.0
+ * @license   https://wikipedia.org/wiki/Freemium Freemium License
+ * @version 2.0.0
  */
 
-namespace System\Reflection\Dependencies;
+namespace Samples\Traits;
 
-abstract class PartialEnum
+use System\Attributes\Partial;
+
+#[Partial]
+trait Simple
 {
-      public const _Namespace = 1;
-      public const _Uses = 2;
-      public const _Class = 4;
-      public const _Extends = 8;
-      public const _Implements = 16;
+      function PrintInstanceMessage()
+      {
+      }
 }
