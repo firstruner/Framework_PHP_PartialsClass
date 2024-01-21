@@ -68,6 +68,7 @@ final class Loader
 
       public static function GetLastDependenciesCount(): int
       {
+            Loader::InitializeLoadingValues();
             return Loader::$Counter;
       }
 
@@ -79,11 +80,13 @@ final class Loader
 
       public static function SetLogActivation(bool $active)
       {
+            Loader::InitializeLoadingValues();
             Loader::$log_active = $active;
       }
 
       public static function GetLog(): array
       {
+            Loader::InitializeLoadingValues();
             return Loader::$log;
       }
 
@@ -111,13 +114,13 @@ final class Loader
 
       private static function InitializeLoadingValues()
       {
-            Loader::$ignoredPath = array();
-            Loader::$includedPath = array();
-            Loader::$log_active = false;
-            Loader::$log = array();
-            Loader::$dependants = array();
-            Loader::$dependants_Loaded = array();
-            Loader::$Counter = 0;
+            if (!isset(Loader::$ignoredPath)) Loader::$ignoredPath = array();
+            if (!isset(Loader::$includedPath)) Loader::$includedPath = array();
+            if (!isset(Loader::$log_active)) Loader::$log_active = false;
+            if (!isset(Loader::$log)) Loader::$log = array();
+            if (!isset(Loader::$dependants)) Loader::$dependants = array();
+            if (!isset(Loader::$dependants_Loaded)) Loader::$dependants_Loaded = array();
+            if (!isset(Loader::$Counter)) Loader::$Counter = 0;
       }
 
       public static function Load(
@@ -137,6 +140,8 @@ final class Loader
 
       public static function LoadStoredPaths(int $maxTemptatives = 1, bool $php_as_partial = false)
       {
+            Loader::InitializeLoadingValues();
+
             Loader::$php_as_partial = $php_as_partial;
 
             foreach (Loader::$includedPath as $path)
@@ -145,6 +150,8 @@ final class Loader
 
       public static function AddIgnorePath(mixed $paths)
       {
+            Loader::InitializeLoadingValues();
+
             if (gettype($paths) == "array")
                   Loader::$ignoredPath = array_merge(Loader::$ignoredPath, $paths);
             else
@@ -153,6 +160,8 @@ final class Loader
 
       public static function AddIncludePath(mixed $paths)
       {
+            Loader::InitializeLoadingValues();
+
             if (gettype($paths) == "array")
                   Loader::$includedPath = array_merge(Loader::$includedPath, $paths);
             else
@@ -253,6 +262,8 @@ final class Loader
 
       private static function StandardPHP_NewTemptative()
       {
+            Loader::CheckPartialMessagesKeysLoaded();
+            
             for ($index = 0; $index < count(Loader::$dependants); $index++) {
                   try {
                         if (Loader::$log_active) Loader::AddToLog(
@@ -280,8 +291,16 @@ final class Loader
                   unset(Loader::$dependants[$index]);
       }
 
+      private static function CheckPartialMessagesKeysLoaded()
+      {
+            if (!class_exists("System\Reflection\Dependencies\PartialMessages"))
+                  require_once("PartialMessages.php");
+      }
+
       private static function StandardPHP_LoadFile($path): bool
       {
+            Loader::CheckPartialMessagesKeysLoaded();
+
             try {
                   if (Loader::$log_active) Loader::AddToLog(
                         str_replace('{0}', $path, PartialMessages::LogAddPreLoad)
@@ -295,7 +314,8 @@ final class Loader
 
                   return true;
             } catch (\Error $e) {
-                  array_push($dependants, $path);
+                  if (Loader::$log_active) Loader::AddToLog($e->getMessage());
+                  return false;
             }
       }
 
@@ -308,6 +328,8 @@ final class Loader
 
       public static function StandardPHP_LoadDependency($path): bool
       {
+            Loader::InitializeLoadingValues();
+
             if (!in_array(
                   str_replace('/', '\\', $path),
                   get_included_files()

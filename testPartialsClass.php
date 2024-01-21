@@ -3,15 +3,15 @@
 header("Content-Type: text/plain");
 
 // Only one require for use Framework Loader
-//require __DIR__ . '/System/Reflection/Dependencies/Loader.php';
+require __DIR__ . '/System/Reflection/Dependencies/Loader.php';
 require __DIR__ . '/System/Reflection/Dependencies/FluentLoader.php';
 
 // For multiple use of Loader class
 
 use System\Reflection\Dependencies\FluentLoader;
-//use System\Reflection\Dependencies\Loader;
+use System\Reflection\Dependencies\Loader;
 
-//Loader::SetLogActivation(true);
+Loader::SetLogActivation(true);
 //Load all php standard POO files in "System" folder
 //Loader::Load(__DIR__ . '/System', php_as_partial: true);
 
@@ -36,3 +36,5 @@ $fluent->Add_Including_Path(array(
 $item = new Samples\Class\MultiplesSimple();
 $item->id = 36;
 echo $item->id;
+
+var_dump(Loader::GetLog());
