@@ -28,12 +28,9 @@
 
 namespace System\Reflection\Dependencies;
 
-abstract class PartialEnumerations_ObjectType
+abstract class PartialEnumerations_DelayedMode
 {
-      public const _Other = 0;
-      public const _Class = 1;
-      public const _Interface = 2;
-      public const _Enumeration = 4;
-      public const _Trait = 8;
-      public const All = 99;
+      public const Without = 0;
+      public const With = 1;
+      public const OnlyDelayed = 2;
 }

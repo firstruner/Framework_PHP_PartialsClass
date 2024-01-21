@@ -61,15 +61,26 @@ final class FluentLoader
 
       public function Load(mixed $included, int $maxTemptatives = 1,
             bool $php_as_partial = false, mixed $ignored = array(),
-            bool $loadDelayedElements = false) : FluentLoader
+            bool $loadDelayedElements = false,
+            int $objectType = PartialEnumerations_ObjectType::All) : FluentLoader
       {
-            Loader::Load($included, $maxTemptatives, $php_as_partial, $ignored, $loadDelayedElements);
+            Loader::Load($included, $maxTemptatives, $php_as_partial,
+                  $ignored, $loadDelayedElements, $objectType);
             return $this;
       }
 
-      public function LoadStoredPaths(int $maxTemptatives = 1, bool $php_as_partial = false) : FluentLoader
+      public function LoadStoredPaths(
+            int $maxTemptatives = 1, bool $php_as_partial = false,
+            int $objectType = PartialEnumerations_ObjectType::All) : FluentLoader
       {
-            Loader::LoadStoredPaths($maxTemptatives, $php_as_partial);
+            Loader::LoadStoredPaths($maxTemptatives, $php_as_partial, $objectType);
+            return $this;
+      }
+
+      public function LoadDelayedElements(bool $php_as_partial = false,
+            int $objectType = PartialEnumerations_ObjectType::All) : FluentLoader
+      {
+            Loader::LoadDelayedElements($php_as_partial, $objectType);
             return $this;
       }
 }

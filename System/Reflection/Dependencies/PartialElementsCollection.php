@@ -189,11 +189,21 @@ final class PartialElementsCollection implements Iterator
             return $content;
       }
 
-      public function CompilePartials(bool $loadDelayedElement = false): bool
+      public function CanBeLoad(int $objectType = PartialEnumerations_ObjectType::All) : bool
+      {
+            if ($objectType == PartialEnumerations_ObjectType::All) return true;
+
+            return ($this->elements[0]->getObjectType()) == $objectType;
+      }
+
+      public function CompilePartials(int $loadDelayedElements = PartialEnumerations_DelayedMode::Without): bool
       {
             $this->FinalAbstractRulesValids();
 
-            if (!$loadDelayedElement && $this->isDelayedElement())
+            if ((($loadDelayedElements == PartialEnumerations_DelayedMode::Without)
+                  && $this->isDelayedElement())
+                  || (($loadDelayedElements == PartialEnumerations_DelayedMode::OnlyDelayed)
+                  && !$this->isDelayedElement()))
                   return true;
 
             $Namespace = PartialConstants::Tag_Namespace . $this->elements[0]->Namespace . ';' . PHP_EOL;

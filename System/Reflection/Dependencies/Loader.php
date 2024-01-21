@@ -36,6 +36,7 @@ function InitializePartialLoader(): bool
             __DIR__ . "/PartialConstants.php",
             __DIR__ . "/PartialEnumerations_Element.php",
             __DIR__ . "/PartialEnumerations_ObjectType.php",
+            __DIR__ . "/PartialEnumerations_DelayedMode.php",
             __DIR__ . "/PartialElements.php",
             __DIR__ . "/PartialElementsCollection.php"
       );
@@ -128,7 +129,8 @@ final class Loader
             int $maxTemptatives = 1,
             bool $php_as_partial = false,
             mixed $ignored = array(),
-            bool $loadDelayedElements = false
+            int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
+            int $objectType = PartialEnumerations_ObjectType::All
       ) {
             Loader::InitializeLoadingValues();
             Loader::$php_as_partial = $php_as_partial;
@@ -136,23 +138,34 @@ final class Loader
             Loader::AddIgnorePath($ignored);
             Loader::AddIncludePath($included);
 
-            Loader::LoadAllElements($maxTemptatives, $loadDelayedElements);
+            Loader::LoadAllElements($maxTemptatives, $loadDelayedElements, $objectType);
       }
 
       public static function LoadStoredPaths(int $maxTemptatives = 1,
-            bool $php_as_partial = false)
+            bool $php_as_partial = false,
+            int $objectType = PartialEnumerations_ObjectType::All)
       {
             Loader::InitializeLoadingValues();
             Loader::$php_as_partial = $php_as_partial;
        
-            Loader::LoadAllElements($maxTemptatives, true);
+            Loader::LoadAllElements($maxTemptatives, PartialEnumerations_DelayedMode::With, $objectType);
+      }
+
+      public static function LoadDelayedElements(bool $php_as_partial = false,
+            int $objectType = PartialEnumerations_ObjectType::All)
+      {
+            Loader::InitializeLoadingValues();
+            Loader::$php_as_partial = $php_as_partial;
+       
+            Loader::LoadAllElements(0, PartialEnumerations_DelayedMode::OnlyDelayed, $objectType);
       }
 
       private static function LoadAllElements(int $maxTemptatives = 1,
-            bool $loadDelayedElements = false)
+            int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
+            int $objectType = PartialEnumerations_ObjectType::All)
       {
             foreach (Loader::$includedPath as $path)
-                  Loader::LoadFromPathString($path, $maxTemptatives, $loadDelayedElements);
+                  Loader::LoadFromPathString($path, $maxTemptatives, $loadDelayedElements, $objectType);
       }
 
       public static function AddIgnorePath(mixed $paths)
@@ -176,13 +189,14 @@ final class Loader
       }
 
       private static function LoadFromPathString(string $path,
-            int $maxTemptatives = 1, bool $loadDelayedElements = false)
+            int $maxTemptatives = 1, int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
+            int $objectType = PartialEnumerations_ObjectType::All)
       {
             Loader::$Counter = 0;
             Loader::$dependants = array();
 
             // Main load
-            Loader::$dependants = Loader::LoadFromPath($path, $loadDelayedElements);
+            Loader::$dependants = Loader::LoadFromPath($path, $loadDelayedElements, $objectType);
 
             for ($attempt = 0; $attempt < $maxTemptatives; $attempt++) {
                   if (count(Loader::$dependants) > 0)
@@ -192,7 +206,9 @@ final class Loader
             }
       }
 
-      private static function LoadFromPath(string $path, bool $loadDelayedElements): array
+      private static function LoadFromPath(string $path, 
+            int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
+            int $objectType = PartialEnumerations_ObjectType::All): array
       {
             $dependants = array();
 
@@ -224,26 +240,28 @@ final class Loader
                   } else if (is_dir($currentPath)) {
                         $dependants = array_merge(
                               $dependants,
-                              Loader::LoadFromPath($currentPath, $loadDelayedElements)
+                              Loader::LoadFromPath($currentPath, $loadDelayedElements, $objectType)
                         );
                   }
             }
 
             if ($partialsCollection->count() > 0)
-                  Loader::LoadPartialElement($partialsCollection, $loadDelayedElements);
+                  Loader::LoadPartialElement($partialsCollection, $loadDelayedElements, $objectType);
 
             return $dependants;
       }
 
       private static function LoadPartialElement(PartialElementsCollection $partialsCollection,
-            bool $loadDelayedElements = false)
+            int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
+            int $objectType = PartialEnumerations_ObjectType::All)
       {
             if (Loader::$log_active) Loader::AddToLog(
                   str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad)
             );
 
-            if ($partialsCollection->CompilePartials($loadDelayedElements))
-                  Loader::$Counter++;
+            if ($partialsCollection->CanBeLoad($objectType))
+                  if ($partialsCollection->CompilePartials($loadDelayedElements))
+                        Loader::$Counter++;
 
             if (Loader::$log_active) Loader::AddToLog(
                   str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad)
