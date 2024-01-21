@@ -123,7 +123,7 @@ final class Loader
       public static function Load(
             mixed $included,
             int $maxTemptatives = 1,
-            $php_as_partial = false,
+            bool $php_as_partial = false,
             mixed $ignored = array()
       ) {
             Loader::InitializeLoadingValues();
@@ -132,11 +132,13 @@ final class Loader
             Loader::AddIgnorePath($ignored);
             Loader::AddIncludePath($included);
 
-            Loader::LoadStoredPaths($maxTemptatives);
+            Loader::LoadStoredPaths($maxTemptatives, $php_as_partial);
       }
 
-      public static function LoadStoredPaths(int $maxTemptatives = 1)
+      public static function LoadStoredPaths(int $maxTemptatives = 1, bool $php_as_partial = false)
       {
+            Loader::$php_as_partial = $php_as_partial;
+
             foreach (Loader::$includedPath as $path)
                   Loader::LoadFromPathString($path, $maxTemptatives);
       }

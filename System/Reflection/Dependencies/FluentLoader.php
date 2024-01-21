@@ -32,7 +32,7 @@ final class FluentLoader
 {
       function __construct()
       {
-            InitializePartialLoader();
+            require_once 'Loader.php';
       }
 
       public function Add_Including_Path(mixed $paths) : FluentLoader
@@ -66,9 +66,9 @@ final class FluentLoader
             return $this;
       }
 
-      public function LoadStoredPaths(int $maxTemptatives = 1) : FluentLoader
+      public function LoadStoredPaths(int $maxTemptatives = 1, bool $php_as_partial = false) : FluentLoader
       {
-            Loader::LoadStoredPaths($maxTemptatives);
+            Loader::LoadStoredPaths($maxTemptatives, $php_as_partial);
             return $this;
       }
 }

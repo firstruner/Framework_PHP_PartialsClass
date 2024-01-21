@@ -26,14 +26,14 @@ Actually tested on PHP from 7.1.* to 8.3.*
 ## 🧙‍♂️ Loader (main method)
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
 
-    // The only required dependence for Firstruner Framework
-    require __DIR__ . '/System/Reflection/Dependencies.php';
+    // The only required dependence for use Loader of Firstruner Framework
+    require __DIR__ . '/System/Reflection/Dependencies/Loader.php';
     
     // For multiple use of Loader class
     use System\Reflection\Dependencies\Loader;
     
-    // Load all php POO files in "System" Folder
-    Loader::Load(__DIR__ . '/System');
+    // Load all php POO files in "MyOOP" Folder
+    Loader::Load(__DIR__ . '/MyOOP');
 
 🔰 Load function of Loader class can take in 1st argument a single string or an array of string,\
 
@@ -44,17 +44,19 @@ Create a folder that contains all of your POO Objects (classes, interfaces, enum
 ## 🧙‍♂️ Load with FluentLoader
 This Firstruner Framework contains also a partial loader which is can use in fluent mode.
 
-    // The only required dependence for Firstruner Framework
-    require __DIR__ . '/System/Reflection/Dependencies.php';
+    // The only required dependence for use FluentLoader of Firstruner Framework
+    require __DIR__ . '/System/Reflection/Dependencies/FluentLoader.php';
     
-    // For multiple use of Loader class
+    // For simplify usage of FluentLoader class
     use System\Reflection\Dependencies\FluentLoader;
     
-    // Load all php POO files in "System" Folder
+    // Load all php POO files in "MyOOP_Directory/Classes" and "MyOOP" Folders
     $fluentLoader = new FluentLoader();
-    $fluentLoader->SetLogActivation(true)->Load("MyOOP_Directory/Classes")->SetLogActivation(false)->Add_Including_Path(__DIR__ . '/System')->LoadStoredPaths();
+    $fluentLoader->SetLogActivation(true)->Load("MyOOP_Directory/Classes")->SetLogActivation(false)->Add_Including_Path(__DIR__ . '/MyOOP')->LoadStoredPaths();
 
 ## Notes
+💡 Pay close attention to the loading order !
+
 👉 Loading note : it's recommended to load elements in this ordre :
  1. Enumerations
  2. Interfaces
@@ -74,9 +76,9 @@ But use "php" are more lazy because it necessary to load the php file before det
 In "File editor" section, add "*.partial_php" use like "php" in file association item
 
 ## How use Partials on OOP object
-To create a php files with partials, create a folder for your OOP object, and create all of your files inside.
+💡 To create a php files with partials, create a folder for your OOP object, and create all of your files inside.
 
-### Define a OOP file as partial
+### 👨‍🏭 Define a OOP file as partial
 #### Call attributes
 To define the file as a partial file, you should reference Partials attributes like this :
 
@@ -163,7 +165,7 @@ Now define the OOP file as partial with using Partial attribute like this :
     {
     }
 
-## All Loader Methods
+## All Loader Methods available from Loader static class or from FluentLoader class
 ⚓ Load method :\
 >ℹ️ Main OOP loading method, it can call directly.\
 >✏️ included : Specify path(s) who must be load - Can take string or string array - No default value, Required\
@@ -174,6 +176,7 @@ Now define the OOP file as partial with using Partial attribute like this :
 ⚓ LoadStoredPaths method :\
 >ℹ️ This method try to load OOP paths that specify with Load method or AddIncludePath\
 >✏️ maxTemptatives : Specify the number of loading temptatives - int - default value is 1\
+>✏️ php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False\
 
 ⚓ AddIncludePath method :\
 >ℹ️ This method add OOP paths for Loading. It use before call LoadStoredPaths method\
@@ -186,12 +189,14 @@ Now define the OOP file as partial with using Partial attribute like this :
 ⚓ StandardPHP_LoadDependency method :\
 >ℹ️ This method try to load as 'require' a specific php file path\
 >✏️ paths : Specify path who must be load - String - No default value, Required\
+>🔔 Only available from static class - work also when FluentClass is consume
 
 ⚓ Clear method :\
 >ℹ️ This method clear Loader parameters\
 
 ⚓ GetLastDependenciesCount method :\
 >ℹ️ This method return dependencies who were well loaded\
+>🔔 Only available from static class - work also when FluentClass is consume
 
 ⚓ SetLogActivation method :\
 >ℹ️ This method specify if Loader use a log during loading\
@@ -199,6 +204,7 @@ Now define the OOP file as partial with using Partial attribute like this :
 
 ⚓ GetLog method :\
 >ℹ️ This method return string array about log events\
+>🔔 Only available from static class - work also when FluentClass is consume
 
 ## Possible exceptions
 ⚠️ Name is allready in use\
