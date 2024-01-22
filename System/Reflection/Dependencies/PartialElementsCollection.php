@@ -208,7 +208,10 @@ final class PartialElementsCollection implements Iterator
                   && !$this->isDelayedElement()))
                   return true;
 
-            $Namespace = PartialConstants::Tag_Namespace . $this->elements[0]->Namespace . ';' . PHP_EOL;
+            $Namespace = ($this->elements[0]->Namespace != ""
+                  ? PartialConstants::Tag_Namespace . $this->elements[0]->Namespace . ';' . PHP_EOL
+                  : "");
+
             $ElementName =
                   ($this->isFinalClass() ? "final " : "") .
                   ($this->isAbstractClass() ? "abstract " : "") .

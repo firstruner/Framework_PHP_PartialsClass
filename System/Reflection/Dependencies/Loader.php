@@ -34,6 +34,7 @@ function InitializePartialLoader(): bool
             __DIR__ . "/../../Attributes/PartialsAttributes.php",
             __DIR__ . "/../../Environment/PHP.php",
             __DIR__ . "/PartialConstants.php",
+			__DIR__ . "/PartialMessages.php",
             __DIR__ . "/PartialEnumerations_Element.php",
             __DIR__ . "/PartialEnumerations_ObjectType.php",
             __DIR__ . "/PartialEnumerations_DelayedMode.php",
