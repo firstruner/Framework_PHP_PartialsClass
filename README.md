@@ -75,6 +75,8 @@ But use "php" are more lazy because it necessary to load the php file before det
 ### VS Code
 ⚙️ Go in File menu > Preferences > Settings.\
 In "File editor" section, add "*.partial_php" use like "php" in file association item
+[![vscode-menu.png](https://i.postimg.cc/rybT6yh8/vscode-menu.png)](https://postimg.cc/14p2wShT)\
+[![vscode-ext.png](https://i.postimg.cc/MTTC4gVM/vscode-ext.png)](https://postimg.cc/wtC4RfWg)\
 
 ## How use Partials on OOP object
 💡 To create a php files with partials, create a folder for your OOP object, and create all of your files inside.
@@ -230,10 +232,18 @@ For load delayed elements, use "LoadStoredPaths" method or specify at True "load
 >ℹ️ This method return string array about log events\
 >🔔 Only available from static class - work also when FluentClass is consume
 
-## Possible exceptions
+## Know exceptions
+### During Composer Update
 ⚠️ Name is allready in use\
-It's possible to have compilation exception during a composer update like this :\
-
 [![Composer-Exception.png](https://i.postimg.cc/WzsPyvS2/Composer-Exception.png)](https://postimg.cc/MM34cgh4)
 
 ➡️ To solve that, please use partial_php extension for your partial files and use the Firstruner Framework Loader for load these partial files
+
+### PHP
+⚠️ Name is allready in use\
+[![Whats-App-Image-2024-01-22-at-09-38-41.jpg](https://i.postimg.cc/mg42q2DP/Whats-App-Image-2024-01-22-at-09-38-41.jpg)](https://postimg.cc/kBjmRCWC)
+
+Solutions :\
+➡️ Use Firstruner Framework Loader\
+➡️ Apply partial_php extension on your partial files\
+➡️ Specify php_as_partial at true on Loader calling
