@@ -50,12 +50,12 @@ final class PartialElementsCollection implements Iterator
             $this->position = 0;
       }
 
-      public function current()
+      public function current() : mixed
       {
             return $this->elements[$this->position];
       }
 
-      public function key()
+      public function key() : mixed
       {
             return $this->position;
       }
