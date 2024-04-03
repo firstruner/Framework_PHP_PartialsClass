@@ -30,10 +30,11 @@ namespace System\Reflection\Dependencies;
 
 final class FluentLoader
 {
-      private PartialEnumerations_ObjectType $objectTypeFilter = PartialEnumerations_ObjectType::None;
+      private PartialEnumerations_ObjectType $objectTypeFilter;
 
       function __construct()
       {
+            $this->objectTypeFilter = PartialEnumerations_ObjectType::None;
             require_once 'Loader.php';
       }
 
