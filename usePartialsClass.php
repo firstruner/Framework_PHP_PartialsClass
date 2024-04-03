@@ -10,7 +10,7 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Freemium License
+ * This source file is subject to the proprietary License
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to contact@firstruner.fr so we can send you a copy immediately.
@@ -33,9 +33,6 @@ require __DIR__ . '/System/Reflection/Dependencies/Loader.php';
 
 // For multiple use of Loader class
 use System\Reflection\Dependencies\Loader;
-
-// Load all php standard POO files in "System" folder
-Loader::Load(__DIR__ . '/System', php_as_partial: true);
 
 // It's recommended to load interfaces before class
 Loader::Load(__DIR__ . '/Samples_Interfaces', php_as_partial: true);

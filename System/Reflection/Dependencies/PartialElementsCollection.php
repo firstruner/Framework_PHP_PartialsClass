@@ -50,12 +50,12 @@ final class PartialElementsCollection implements Iterator
             $this->position = 0;
       }
 
-      public function current()
+      public function current() : mixed
       {
             return $this->elements[$this->position];
       }
 
-      public function key()
+      public function key() : mixed
       {
             return $this->position;
       }
@@ -208,7 +208,10 @@ final class PartialElementsCollection implements Iterator
                   && !$this->isDelayedElement()))
                   return true;
 
-            $Namespace = PartialConstants::Tag_Namespace . $this->elements[0]->Namespace . ';' . PHP_EOL;
+            $Namespace = ($this->elements[0]->Namespace != ""
+                  ? PartialConstants::Tag_Namespace . $this->elements[0]->Namespace . ';' . PHP_EOL
+                  : "");
+
             $ElementName =
                   ($this->isFinalClass() ? "final " : "") .
                   ($this->isAbstractClass() ? "abstract " : "") .

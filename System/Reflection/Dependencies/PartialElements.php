@@ -77,11 +77,14 @@ final class PartialElements
 
       private function getNamespace(string $headers): string
       {
+            if (strpos($headers, PartialConstants::Tag_Namespace) == 0)
+                  return "";
+
             $namespaceStart = strpos($headers, PartialConstants::Tag_Namespace)
                   + strlen(PartialConstants::Tag_Namespace);
 
             return substr(
-                  $headers,
+                  str_replace("<?php","", $headers),
                   $namespaceStart,
                   strpos($headers, ';', $namespaceStart) - $namespaceStart
             );
