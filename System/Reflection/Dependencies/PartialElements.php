@@ -80,11 +80,13 @@ final class PartialElements
             if (strpos($headers, PartialConstants::Tag_Namespace) == 0)
                   return "";
 
+            $headers = str_replace("<?php","", $headers);
+
             $namespaceStart = strpos($headers, PartialConstants::Tag_Namespace)
                   + strlen(PartialConstants::Tag_Namespace);
 
             return substr(
-                  str_replace("<?php","", $headers),
+                  $headers,
                   $namespaceStart,
                   strpos($headers, ';', $namespaceStart) - $namespaceStart
             );
