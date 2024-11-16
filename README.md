@@ -15,7 +15,7 @@ Actually tested on PHP from 7.1.* to 8.3.*
 🌞 v1.0 Initial repository\
 🌞 v1.1 Uses, inheritance and implementations support\
 🌞 v1.2 Final and Abstract support for classes\
-💫 v2.0 🎇 Features :\
+🌞 v2.0 🎇 Features :\
  1. Interfaces, Enumerations and Trait support
  2. Conversion Enum files for PHP >= 8.1 to Abstract class files for PHP >= 7.1
  3. Fix exception on Composer Update (Tested with Symfony and Laravel project)
@@ -23,6 +23,10 @@ Actually tested on PHP from 7.1.* to 8.3.*
  5. Implement a fluent class for load partial OOP
  6. Implement log possibilities
  7. Implement delayed loading possibilities
+ 💫 v2.1 🎇 Features :\
+ 1. Loading bugs
+ 2. Allow array of path
+ 3. Auto-manage slash and backslash char for container usages
 
 ## 🧙‍♂️ Loader (main method)
 Create a folder that contains all of your POO Objects (classes, interfaces, enumerations and other).
