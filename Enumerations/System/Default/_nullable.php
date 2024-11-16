@@ -18,20 +18,15 @@
  *
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
- * @license   https://wikipedia.org/wiki/Freemium Freemium License
+ * @license   Proprietary
  * @version 2.0.0
  */
 
-namespace System\Environment;
+namespace System\Default;
 
-class PHP
+class _nullable
 {
-      public static function getCurrentVersion(): array
-      {
-            return array(
-                  "Major" => PHP_MAJOR_VERSION,
-                  "Minor" => PHP_MINOR_VERSION,
-                  "Patch" => PHP_EXTRA_VERSION
-            );
-      }
+      public const ClassName = "null";
+      public const ClassName_Upper = "NULL";
+      public const DBNull = "DBNull";
 }

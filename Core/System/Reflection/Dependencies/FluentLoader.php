@@ -30,7 +30,7 @@ namespace System\Reflection\Dependencies;
 
 final class FluentLoader
 {
-      private PartialEnumerations_ObjectType $objectTypeFilter;
+      private int $objectTypeFilter;
 
       function __construct()
       {

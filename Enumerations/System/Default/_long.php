@@ -1,10 +1,6 @@
 <?php
 
 /**
- * This file is a part of Firstruner Framework for PHP
- */
-
-/**
  * Copyright since 2024 Firstruner and Contributors
  * Firstruner is an Registered Trademark & Property of Christophe BOULAS
  *
@@ -22,20 +18,16 @@
  *
  * @author    Firstruner and Contributors <contact@firstruner.fr>
  * @copyright Since 2024 Firstruner and Contributors
- * @license   https://wikipedia.org/wiki/Freemium Freemium License
+ * @license   Proprietary
  * @version 2.0.0
  */
 
-namespace System\Attributes;
+namespace System\Default;
 
-use Attribute;
-
-#[Attribute(Attribute::TARGET_CLASS)]
-final class Partial
+class _long
 {
-      public bool $delayedLoading = false;
-
-      public function __construct(bool $delayedLoading = false) {
-            $this->delayedLoading = $delayedLoading;
-        }
+      public const ClassName = "long";
+      public const MinValue = -9223372036854775808;
+      public const MaxValue = 9223372036854775807;
+      public const Initial = 0;
 }

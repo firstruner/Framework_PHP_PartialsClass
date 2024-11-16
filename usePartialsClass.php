@@ -29,10 +29,17 @@
 header("Content-Type: text/plain");
 
 // Only one require for use Framework Loader
-require __DIR__ . '/System/Reflection/Dependencies/Loader.php';
+require __DIR__ . '/Core/System/Reflection/Dependencies/Loader.php';
 
 // For multiple use of Loader class
 use System\Reflection\Dependencies\Loader;
+
+Loader::Load(
+      [
+            __DIR__ . '/Enumerations',
+            __DIR__ . '/Core/System',
+      ]
+);
 
 // It's recommended to load interfaces before class
 Loader::Load(__DIR__ . '/Samples_Interfaces', php_as_partial: true);

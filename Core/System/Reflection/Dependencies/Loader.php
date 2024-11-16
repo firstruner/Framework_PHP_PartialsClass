@@ -28,13 +28,21 @@
 
 namespace System\Reflection\Dependencies;
 
+class ClassAlreadyExistsException extends \Exception {}
+
+use System\Default\_array;
+use System\Default\_string;
+
 function InitializePartialLoader(): bool
 {
       $libs = array(
+            __DIR__ . "/../../../../Enumerations/System/Default/_array.php",
+            __DIR__ . "/../../../../Enumerations/System/Default/_string.php",
             __DIR__ . "/../../Attributes/PartialsAttributes.php",
+            __DIR__ . "/../../Runtime/Version.php",
             __DIR__ . "/../../Environment/PHP.php",
             __DIR__ . "/PartialConstants.php",
-			__DIR__ . "/PartialMessages.php",
+            __DIR__ . "/PartialMessages.php",
             __DIR__ . "/PartialEnumerations_Element.php",
             __DIR__ . "/PartialEnumerations_ObjectType.php",
             __DIR__ . "/PartialEnumerations_DelayedMode.php",
@@ -43,8 +51,11 @@ function InitializePartialLoader(): bool
       );
 
       foreach ($libs as $lib)
-            if (!in_array($lib, get_included_files()))
-                  Loader::StandardPHP_LoadDependency($lib);
+            if (!in_array(realpath($lib), get_included_files()))
+                  Loader::StandardPHP_LoadDependency(realpath($lib));
+      
+      if (strpos(get_included_files()[0], "/") < 0)
+            Loader::SetEscapeChar('\\', '/');
 
       return true;
 }
@@ -61,12 +72,18 @@ final class Loader
       private static array $includedPath = array();
       private static bool $log_active = false;
       private static array $log = array();
+      private static array $escapesChars = [ "/", "\\"];
 
       private const IndexFileName = "index.php";
       private const PartialsAttributesFileName = "PartialsAttributes.php";
       private const PhpExtension = "php";
       private const PhpPartialExtension = "partial_php";
       private const PartialFileHeading = "// --- File : ";
+
+      public static function SetEscapeChar(string $origin, string $fixed)
+      {
+            Loader::$escapesChars = [ $origin, $fixed ];
+      }
 
       /**
        * Return count about last elements loaded
@@ -82,7 +99,7 @@ final class Loader
        */
       public static function Clear()
       {
-            Loader::InitializeLoadingValues();
+            Loader::InitializeLoadingValues(true);
             Loader::$php_as_partial = false;
       }
 
@@ -121,20 +138,20 @@ final class Loader
                         str_replace("/", "\\", $path) ==
                         str_replace("/", "\\", $ignored)
                   )
-                  return true;
+                        return true;
 
             return false;
       }
 
-      private static function InitializeLoadingValues()
+      private static function InitializeLoadingValues(bool $force = false)
       {
-            if (!isset(Loader::$ignoredPath)) Loader::$ignoredPath = array();
-            if (!isset(Loader::$includedPath)) Loader::$includedPath = array();
-            if (!isset(Loader::$log_active)) Loader::$log_active = false;
-            if (!isset(Loader::$log)) Loader::$log = array();
-            if (!isset(Loader::$dependants)) Loader::$dependants = array();
-            if (!isset(Loader::$dependants_Loaded)) Loader::$dependants_Loaded = array();
-            if (!isset(Loader::$Counter)) Loader::$Counter = 0;
+            if (!isset(Loader::$ignoredPath) || $force) Loader::$ignoredPath = array();
+            if (!isset(Loader::$includedPath) || $force) Loader::$includedPath = array();
+            if (!isset(Loader::$log_active) || $force) Loader::$log_active = false;
+            if (!isset(Loader::$log) || $force) Loader::$log = array();
+            if (!isset(Loader::$dependants) || $force) Loader::$dependants = array();
+            if (!isset(Loader::$dependants_Loaded) || $force) Loader::$dependants_Loaded = array();
+            if (!isset(Loader::$Counter) || $force) Loader::$Counter = 0;
       }
 
       /**
@@ -152,9 +169,10 @@ final class Loader
             bool $php_as_partial = false,
             mixed $ignored = array(),
             int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
-            int $objectType = PartialEnumerations_ObjectType::All
+            int $objectType = PartialEnumerations_ObjectType::All,
+            bool $clearLists = true
       ) {
-            Loader::InitializeLoadingValues();
+            Loader::InitializeLoadingValues($clearLists);
             Loader::$php_as_partial = $php_as_partial;
 
             Loader::AddIgnorePath($ignored);
@@ -172,13 +190,14 @@ final class Loader
        * @php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False
        * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
        */
-      public static function LoadStoredPaths(int $maxTemptatives = 1,
+      public static function LoadStoredPaths(
+            int $maxTemptatives = 1,
             bool $php_as_partial = false,
-            int $objectType = PartialEnumerations_ObjectType::All)
-      {
+            int $objectType = PartialEnumerations_ObjectType::All
+      ) {
             Loader::InitializeLoadingValues();
             Loader::$php_as_partial = $php_as_partial;
-       
+
             Loader::LoadAllElements($maxTemptatives, PartialEnumerations_DelayedMode::With, $objectType);
       }
 
@@ -187,19 +206,21 @@ final class Loader
        * @php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False
        * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
        */
-      public static function LoadDelayedElements(bool $php_as_partial = false,
-            int $objectType = PartialEnumerations_ObjectType::All)
-      {
+      public static function LoadDelayedElements(
+            bool $php_as_partial = false,
+            int $objectType = PartialEnumerations_ObjectType::All
+      ) {
             Loader::InitializeLoadingValues();
             Loader::$php_as_partial = $php_as_partial;
-       
+
             Loader::LoadAllElements(0, PartialEnumerations_DelayedMode::OnlyDelayed, $objectType);
       }
 
-      private static function LoadAllElements(int $maxTemptatives = 1,
+      private static function LoadAllElements(
+            int $maxTemptatives = 1,
             int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
-            int $objectType = PartialEnumerations_ObjectType::All)
-      {
+            int $objectType = PartialEnumerations_ObjectType::All
+      ) {
             foreach (Loader::$includedPath as $path)
                   Loader::LoadFromPathString($path, $maxTemptatives, $loadDelayedElements, $objectType);
       }
@@ -212,7 +233,7 @@ final class Loader
       {
             Loader::InitializeLoadingValues();
 
-            if (gettype($paths) == "array")
+            if (gettype($paths) == _array::ClassName)
                   Loader::$ignoredPath = array_merge(Loader::$ignoredPath, $paths);
             else
                   array_push(Loader::$ignoredPath, $paths);
@@ -226,16 +247,18 @@ final class Loader
       {
             Loader::InitializeLoadingValues();
 
-            if (gettype($paths) == "array")
+            if (gettype($paths) == _array::ClassName)
                   Loader::$includedPath = array_merge(Loader::$includedPath, $paths);
             else
                   array_push(Loader::$includedPath, $paths);
       }
 
-      private static function LoadFromPathString(string $path,
-            int $maxTemptatives = 1, int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
-            int $objectType = PartialEnumerations_ObjectType::All)
-      {
+      private static function LoadFromPathString(
+            string $path,
+            int $maxTemptatives = 1,
+            int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
+            int $objectType = PartialEnumerations_ObjectType::All
+      ) {
             Loader::$Counter = 0;
             Loader::$dependants = array();
 
@@ -250,42 +273,52 @@ final class Loader
             }
       }
 
-      private static function LoadFromPath(string $path, 
-            int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
-            int $objectType = PartialEnumerations_ObjectType::All): array
+      private static function LoadFromFile(string $currentPath, PartialElementsCollection &$partialsCollection)
       {
+            $ext = pathinfo($currentPath, PATHINFO_EXTENSION);
+            $preload = _string::EmptyString;
+
+            switch ($ext) {
+                  case Loader::PhpExtension:
+                        $preload = Loader::StandardPHP_TryGetContent($currentPath);
+                  case Loader::PhpPartialExtension:
+                        if (!Loader::PartialPHP_AddToCollection(
+                              $partialsCollection,
+                              strlen($preload) > 0 ? $preload : file_get_contents($currentPath),
+                              $currentPath
+                        ))
+                              if (Loader::StandardPHP_LoadFile($currentPath))
+                                    Loader::$Counter++;
+                        break;
+            }
+      }
+
+      private static function LoadFromPath(
+            string $path,
+            int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
+            int $objectType = PartialEnumerations_ObjectType::All
+      ): array {
             $dependants = array();
 
             $partialsCollection = new PartialElementsCollection();
 
-            foreach (scandir($path) as $filename) {
-                  $currentPath = $path . '/' . $filename;
+            if (is_file($path)) {
+                  Loader::LoadFromFile($path, $partialsCollection);
+            } else {
+                  foreach (scandir($path) as $filename) {
+                        $currentPath = $path . '/' . $filename;
 
-                  if (Loader::IsNotLoadable($currentPath, $filename))
-                        continue;
+                        if (Loader::IsNotLoadable($currentPath, $filename))
+                              continue;
 
-                  if (is_file($currentPath)) {
-                        $ext = pathinfo($currentPath, PATHINFO_EXTENSION);
-                        $preload = "";
-
-                        switch ($ext) {
-                              case Loader::PhpExtension:
-                                    $preload = Loader::StandardPHP_TryGetContent($currentPath);
-                              case Loader::PhpPartialExtension:
-                                    if (!Loader::PartialPHP_AddToCollection(
-                                          $partialsCollection,
-                                          strlen($preload) > 0 ? $preload : file_get_contents($currentPath),
-                                          $filename
-                                    ))
-                                          if (Loader::StandardPHP_LoadFile($currentPath))
-                                                Loader::$Counter++;
-                                    break;
+                        if (is_file($currentPath)) {
+                              Loader::LoadFromFile($currentPath, $partialsCollection);
+                        } else if (is_dir($currentPath)) {
+                              $dependants = array_merge(
+                                    $dependants,
+                                    Loader::LoadFromPath($currentPath, $loadDelayedElements, $objectType)
+                              );
                         }
-                  } else if (is_dir($currentPath)) {
-                        $dependants = array_merge(
-                              $dependants,
-                              Loader::LoadFromPath($currentPath, $loadDelayedElements, $objectType)
-                        );
                   }
             }
 
@@ -295,10 +328,11 @@ final class Loader
             return $dependants;
       }
 
-      private static function LoadPartialElement(PartialElementsCollection $partialsCollection,
+      private static function LoadPartialElement(
+            PartialElementsCollection $partialsCollection,
             int $loadDelayedElements = PartialEnumerations_DelayedMode::Without,
-            int $objectType = PartialEnumerations_ObjectType::All)
-      {
+            int $objectType = PartialEnumerations_ObjectType::All
+      ) {
             if (Loader::$log_active) Loader::AddToLog(
                   str_replace('{0}', $partialsCollection->GetElementName(), PartialMessages::LogAddPreLoad)
             );
@@ -334,7 +368,7 @@ final class Loader
       private static function StandardPHP_NewTemptative()
       {
             Loader::CheckPartialMessagesKeysLoaded();
-            
+
             for ($index = 0; $index < count(Loader::$dependants); $index++) {
                   try {
                         if (Loader::$log_active) Loader::AddToLog(
@@ -394,21 +428,112 @@ final class Loader
       {
             return Loader::$php_as_partial
                   ? file_get_contents($path)
-                  : "";
+                  : _string::EmptyString;
       }
+
+      // private static function array_search_partial($arr, $keyword) {
+      //       foreach($arr as $index => $string) {
+      //             if (strpos($string, $keyword) !== FALSE)
+      //                   return true;
+      //             }
+
+      //       return false;
+      // }
+
+      /*public static function getFullClassNameFromFile($filePath) {
+            $phpCode = file_get_contents($filePath);
+
+            // Rechercher le namespace avec une expression régulière
+            $namespace = '';
+            if (preg_match('/namespace\s+([a-zA-Z0-9_\\\\]+)\s*;/', $phpCode, $namespaceMatches)) {
+                  $namespace = $namespaceMatches[1] . '\\';
+            }
+
+            // Rechercher le nom de la classe avec une expression régulière
+            if (preg_match('/class\s+([a-zA-Z0-9_]+)/', $phpCode, $classMatches)) {
+                  return $namespace . $classMatches[1];
+            }
+
+            throw new Exception("Aucune classe trouvée dans le fichier $filePath.");
+      }
+
+      public static function requireClassFile($filePath) {
+            try {
+                  // Obtenir le nom complet de la classe (namespace + nom de classe) à partir du fichier
+                  $fullClassName = Loader::getFullClassNameFromFile($filePath);
+
+                  // Vérifier si la classe existe déjà
+                  if (class_exists($fullClassName)) {
+                        throw new ClassAlreadyExistsException("La classe $fullClassName est déjà définie.");
+                  }
+
+                  // Inclure le fichier
+                  require $filePath;
+                  //echo "Classe $fullClassName incluse avec succès.";
+            } catch (ClassAlreadyExistsException $e) {
+                  // Gérer l'exception si la classe existe déjà
+                  echo 'Erreur : ' . $e->getMessage();
+            } catch (Exception $e) {
+                  // Gérer les autres exceptions générales
+                  echo 'Erreur générale : ' . $e->getMessage();
+            }
+      }*/
+
+      /*// Utiliser la fonction pour inclure un fichier de classe
+      requireClassFile('path/to/your/ClassFile.php');*/
 
       /**
        * Try to load a standard PHP File
        */
-      public static function StandardPHP_LoadDependency($path): bool
+      public static function StandardPHP_LoadDependency($path, bool $OnceOnly = false): bool
       {
             Loader::InitializeLoadingValues();
+            $path = realpath(str_replace('/', Loader::$escapesChars[0], $path));
 
-            if (!in_array(
-                  str_replace('/', '\\', $path),
-                  get_included_files()
-            )) {
-                  require $path;
+            /*if (strpos($path, "_array.php") > 0)
+            {
+                  var_dump(get_included_files());
+                  var_dump("FILE :> " . $path);
+                  var_dump("CORRECTED FILE :> " . str_replace('/', '\\', $path));
+                  var_dump("IN_ARRAY : " .
+                        in_array(
+                              str_replace('/', Loader::$escapesChars[0], $path),
+                              get_included_files()
+                        ) ? "Trouvé" : "Pas trouvé"
+                  );
+            }*/
+
+            if (!in_array($path, get_included_files()))
+            {
+                  try
+                  {
+                        if ($OnceOnly)
+                        {
+                              require_once($path);
+                        }
+                        else
+                        {
+                              /*if (in_array($path, get_included_files()))
+                              {
+                                    var_dump(get_included_files());
+                              }
+                              else
+                              {
+                                    var_dump($path);
+                              }*/
+
+                              if (is_file($path)) require($path);
+                        }
+                        //Loader::requireClassFile($path);
+                  } catch (\Error $err) {
+                        //var_dump(get_included_files());
+                        echo new \Exception(
+                              "Error on loading Standard file " .
+                                    $path . " - " .
+                                    $err->getMessage() . " (" . $err->getLine() . ") "
+                        );
+                  }
+
                   return true;
             }
 

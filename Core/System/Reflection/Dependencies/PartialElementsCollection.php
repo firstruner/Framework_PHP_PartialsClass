@@ -30,7 +30,6 @@ namespace System\Reflection\Dependencies;
 
 use Exception;
 use Iterator;
-use Random\BrokenRandomEngineError;
 use System\Environment\PHP;
 
 final class PartialElementsCollection implements Iterator
@@ -50,12 +49,12 @@ final class PartialElementsCollection implements Iterator
             $this->position = 0;
       }
 
-      public function current() : mixed
+      public function current(): mixed
       {
             return $this->elements[$this->position];
       }
 
-      public function key() : mixed
+      public function key(): mixed
       {
             return $this->position;
       }
@@ -80,7 +79,7 @@ final class PartialElementsCollection implements Iterator
             return count($this->elements);
       }
 
-      public function GetElementName() : string
+      public function GetElementName(): string
       {
             if ($this->count() == 0) return "no elements in collection";
 
@@ -146,14 +145,16 @@ final class PartialElementsCollection implements Iterator
             return true;
       }
 
-      private function isOldPHPVersion() : bool
+      private function isOldPHPVersion(): bool
       {
-            return (PHP::getCurrentVersion()["Major"] < 8)
-                  || ((PHP::getCurrentVersion()["Major"] == 8)
-                        && (PHP::getCurrentVersion()["Minor"] < 1));
+            $php_version = PHP::getCurrentVersion();
+
+            return ($php_version->Major < 8)
+                  || (($php_version->Major == 8)
+                        && ($php_version->Minor < 1));
       }
 
-      private function isDelayedElement() : bool
+      private function isDelayedElement(): bool
       {
             foreach ($this->elements as $elem)
                   if ($elem->DelayedLoading) return true;
@@ -161,35 +162,41 @@ final class PartialElementsCollection implements Iterator
             return false;
       }
 
-      private function EnumClassHeaderAdapter(string $elementName) : string
+      private function EnumClassHeaderAdapter(string $elementName): string
       {
             preg_replace('/\s\s+/', ' ', $elementName);
 
-            if ($this->isOldPHPVersion()
-                  && ($this->elements[0]->objectType == PartialEnumerations_ObjectType::_Enumeration))
-                        return str_replace(
-                              PartialConstants::Tag_Enum,
-                              PartialConstants::Tag_AbstractClass,
-                              $elementName);
-            
+            if (
+                  $this->isOldPHPVersion()
+                  && ($this->elements[0]->getObjectType() == PartialEnumerations_ObjectType::_Enumeration)
+            )
+                  return str_replace(
+                        PartialConstants::Tag_Enum,
+                        PartialConstants::Tag_AbstractClass,
+                        $elementName
+                  );
+
             return $elementName;
       }
 
-      private function EnumClassContentAdapter(string $content) : string
+      private function EnumClassContentAdapter(string $content): string
       {
             preg_replace('/\s\s+/', ' ', $content);
 
-            if ($this->isOldPHPVersion()
-                  && ($this->elements[0]->objectType == PartialEnumerations_ObjectType::_Enumeration))
-                        return str_replace(
-                              PartialConstants::Tag_EnumCaseTag,
-                              PartialConstants::Tag_AbstractClassConstTag,
-                              $content);
-            
+            if (
+                  $this->isOldPHPVersion()
+                  && ($this->elements[0]->getObjectType() == PartialEnumerations_ObjectType::_Enumeration)
+            )
+                  return str_replace(
+                        PartialConstants::Tag_EnumCaseTag,
+                        PartialConstants::Tag_AbstractClassConstTag,
+                        $content
+                  );
+
             return $content;
       }
 
-      public function CanBeLoad(int $objectType = PartialEnumerations_ObjectType::All) : bool
+      public function CanBeLoad(int $objectType = PartialEnumerations_ObjectType::All): bool
       {
             if ($objectType == PartialEnumerations_ObjectType::All) return true;
 
@@ -201,11 +208,12 @@ final class PartialElementsCollection implements Iterator
             $this->FinalAbstractRulesValids();
 
             if ((($loadDelayedElements == PartialEnumerations_DelayedMode::Without)
-                  && $this->isDelayedElement())
+                        && $this->isDelayedElement())
                   || (($loadDelayedElements == PartialEnumerations_DelayedMode::OnPost)
-                  && $this->isDelayedElement())
+                        && $this->isDelayedElement())
                   || (($loadDelayedElements == PartialEnumerations_DelayedMode::OnlyDelayed)
-                  && !$this->isDelayedElement()))
+                        && !$this->isDelayedElement())
+            )
                   return true;
 
             $Namespace = ($this->elements[0]->Namespace != ""
@@ -216,7 +224,7 @@ final class PartialElementsCollection implements Iterator
                   ($this->isFinalClass() ? "final " : "") .
                   ($this->isAbstractClass() ? "abstract " : "") .
                   $this->elements[0]->getHeaderTag() . $this->elements[0]->ElementName . PHP_EOL;
-            
+
             $Uses = "";
             $Extends = "";
             $Implements = "";
@@ -263,9 +271,11 @@ final class PartialElementsCollection implements Iterator
                   $ElementName . " " . $Extends . " " . $Implements . PHP_EOL .
                   "{" . PHP_EOL . $Contents . PHP_EOL . "}";
 
+            // if (strpos($finalClass, 'class Guid'))
+            //       var_dump($finalClass);
+
             try {
-                  switch ($ElementType)
-                  {
+                  switch ($ElementType) {
                         case PartialEnumerations_ObjectType::_Class:
                               if (class_exists($OOPFullName)) return true;
                               break;
@@ -284,11 +294,11 @@ final class PartialElementsCollection implements Iterator
 
                   eval($finalClass);
                   return true;
-            } catch (\Error $e) {
+            } catch (\Error $err) {
                   echo new \Exception(
                         PartialMessages::ExceptionOnLoading .
                               " on " . $ElementName . " - " .
-                              $e->getMessage()
+                              $err->getMessage()
                   );
             }
 
