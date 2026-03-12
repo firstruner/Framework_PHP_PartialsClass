@@ -5,7 +5,7 @@
  */
 
 /**
- * Copyright since 2024 Firstruner and Contributors
+ * Copyright 2024-2026 Firstruner and Contributors
  * Firstruner is an Registered Trademark & Property of Christophe BOULAS
  *
  * NOTICE OF LICENSE
@@ -21,9 +21,9 @@
  * Please refer to https://firstruner.fr/ or contact Firstruner for more information.
  *
  * @author    Firstruner and Contributors <contact@firstruner.fr>
- * @copyright Since 2024 Firstruner and Contributors
+ * @copyright 2024-2026 Firstruner and Contributors
  * @license   https://wikipedia.org/wiki/Freemium Freemium License
- * @version 2.0.0
+ * @version 3.3.0
  */
 
 namespace System\Reflection\Dependencies;
@@ -53,7 +53,7 @@ function InitializePartialLoader(): bool
       foreach ($libs as $lib)
             if (!in_array(realpath($lib), get_included_files()))
                   Loader::StandardPHP_LoadDependency(realpath($lib));
-      
+
       if (strpos(get_included_files()[0], "/") < 0)
             Loader::SetEscapeChar('\\', '/');
 
@@ -64,6 +64,8 @@ InitializePartialLoader();
 
 final class Loader
 {
+      public const LoaderVersion = "1.7";
+
       private static array $dependants = array();
       private static array $dependants_Loaded = array();
       private static int $Counter = 0;
@@ -72,7 +74,10 @@ final class Loader
       private static array $includedPath = array();
       private static bool $log_active = false;
       private static array $log = array();
-      private static array $escapesChars = [ "/", "\\"];
+      private static array $escapesChars = ["/", "\\"];
+      public static bool $debug = false;
+      public static bool $passErrors = false;
+      public static bool $stackTrace = false;
 
       private const IndexFileName = "index.php";
       private const PartialsAttributesFileName = "PartialsAttributes.php";
@@ -82,7 +87,7 @@ final class Loader
 
       public static function SetEscapeChar(string $origin, string $fixed)
       {
-            Loader::$escapesChars = [ $origin, $fixed ];
+            Loader::$escapesChars = [$origin, $fixed];
       }
 
       /**
@@ -275,6 +280,9 @@ final class Loader
 
       private static function LoadFromFile(string $currentPath, PartialElementsCollection &$partialsCollection)
       {
+            if (Loader::$debug)
+                  echo PHP_EOL . "Chargement de " . $currentPath;
+
             $ext = pathinfo($currentPath, PATHINFO_EXTENSION);
             $preload = _string::EmptyString;
 
@@ -283,9 +291,9 @@ final class Loader
                         $preload = Loader::StandardPHP_TryGetContent($currentPath);
                   case Loader::PhpPartialExtension:
                         if (!Loader::PartialPHP_AddToCollection(
-                              $partialsCollection,
-                              strlen($preload) > 0 ? $preload : file_get_contents($currentPath),
-                              $currentPath
+                              collection: $partialsCollection,
+                              content: strlen($preload) > 0 ? $preload : file_get_contents($currentPath),
+                              filename: $currentPath
                         ))
                               if (Loader::StandardPHP_LoadFile($currentPath))
                                     Loader::$Counter++;
@@ -308,7 +316,7 @@ final class Loader
                   foreach (scandir($path) as $filename) {
                         $currentPath = $path . '/' . $filename;
 
-                        if (Loader::IsNotLoadable($currentPath, $filename))
+                        if (Loader::IsNotLoadable($currentPath)) //, $filename))
                               continue;
 
                         if (is_file($currentPath)) {
@@ -411,7 +419,7 @@ final class Loader
                         str_replace('{0}', $path, PartialMessages::LogAddPreLoad)
                   );
 
-                  Loader::StandardPHP_LoadDependency($path);
+                  Loader::StandardPHP_LoadDependency(path: $path);
 
                   if (Loader::$log_active) Loader::AddToLog(
                         str_replace('{0}', $path, PartialMessages::LogAddPostLoad)
@@ -490,48 +498,37 @@ final class Loader
             Loader::InitializeLoadingValues();
             $path = realpath(str_replace('/', Loader::$escapesChars[0], $path));
 
-            /*if (strpos($path, "_array.php") > 0)
-            {
-                  var_dump(get_included_files());
-                  var_dump("FILE :> " . $path);
-                  var_dump("CORRECTED FILE :> " . str_replace('/', '\\', $path));
-                  var_dump("IN_ARRAY : " .
-                        in_array(
-                              str_replace('/', Loader::$escapesChars[0], $path),
-                              get_included_files()
-                        ) ? "Trouvé" : "Pas trouvé"
-                  );
-            }*/
+            if (!in_array($path, haystack: get_included_files())) {
+                  set_error_handler(function ($severity, $message, $file, $line) {
+                        throw new \ErrorException($message, 0, $severity, $file, $line);
+                  });
 
-            if (!in_array($path, get_included_files()))
-            {
-                  try
-                  {
-                        if ($OnceOnly)
-                        {
+                  try {
+                        if ($OnceOnly) {
                               require_once($path);
-                        }
-                        else
-                        {
-                              /*if (in_array($path, get_included_files()))
-                              {
-                                    var_dump(get_included_files());
+                        } else {
+                              if (Loader::$passErrors) {
+                                    spl_autoload_register(function ($path) {
+                                          if (is_file($path)) {
+                                                require $path;
+                                          }
+                                    });
+                              } else {
+                                    if (is_file($path)) require($path);
                               }
-                              else
-                              {
-                                    var_dump($path);
-                              }*/
-
-                              if (is_file($path)) require($path);
                         }
+
+
                         //Loader::requireClassFile($path);
-                  } catch (\Error $err) {
+                  } catch (\Throwable $err) {
                         //var_dump(get_included_files());
                         echo new \Exception(
                               "Error on loading Standard file " .
                                     $path . " - " .
                                     $err->getMessage() . " (" . $err->getLine() . ") "
                         );
+                  } finally {
+                        restore_error_handler();
                   }
 
                   return true;

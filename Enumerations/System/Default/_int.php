@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright since 2024 Firstruner and Contributors
+ * Copyright 2024-2026 Firstruner and Contributors
  * Firstruner is an Registered Trademark & Property of Christophe BOULAS
  *
  * NOTICE OF LICENSE
@@ -17,9 +17,9 @@
  * Please refer to https://firstruner.fr/ or contact Firstruner for more information.
  *
  * @author    Firstruner and Contributors <contact@firstruner.fr>
- * @copyright Since 2024 Firstruner and Contributors
+ * @copyright 2024-2026 Firstruner and Contributors
  * @license   Proprietary
- * @version 2.0.0
+ * @version 3.3.0
  */
 
 namespace System\Default;
@@ -27,7 +27,7 @@ namespace System\Default;
 class _int
 {
       public const ClassName = "int";
-      public const MinValue = -2147483648;
-      public const MaxValue = 2147483647;
+      public const MinValue =  -9223372036854775808; // old value : -2147483648;
+      public const MaxValue = 9223372036854775807; // old value : 2147483647;
       public const Initial = 0;
 }

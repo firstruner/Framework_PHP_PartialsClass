@@ -5,7 +5,7 @@
  */
 
 /**
- * Copyright since 2024 Firstruner and Contributors
+ * Copyright 2024-2026 Firstruner and Contributors
  * Firstruner is an Registered Trademark & Property of Christophe BOULAS
  *
  * NOTICE OF LICENSE
@@ -21,9 +21,9 @@
  * Please refer to https://firstruner.fr/ or contact Firstruner for more information.
  *
  * @author    Firstruner and Contributors <contact@firstruner.fr>
- * @copyright Since 2024 Firstruner and Contributors
+ * @copyright 2024-2026 Firstruner and Contributors
  * @license   https://wikipedia.org/wiki/Freemium Freemium License
- * @version 2.0.0
+ * @version 3.3.0
  */
 
 namespace System\Reflection\Dependencies;
@@ -50,7 +50,7 @@ final class FluentLoader
        * Add_Including_Path
        * @paths : Specify path(s) who must be load - Can take string or string array - No default value, Required
        */
-      public function Add_Including_Path(mixed $paths) : FluentLoader
+      public function Add_Including_Path(mixed $paths): FluentLoader
       {
             Loader::AddIncludePath($paths);
             return $this;
@@ -60,7 +60,7 @@ final class FluentLoader
        * Add_Ignoring_Path
        * @paths : Specify path(s) who must be load - Can take string or string array - No default value, Required
        */
-      public function Add_Ignoring_Path(mixed $paths) : FluentLoader
+      public function Add_Ignoring_Path(mixed $paths): FluentLoader
       {
             Loader::AddIgnorePath($paths);
             return $this;
@@ -69,7 +69,7 @@ final class FluentLoader
       /**
        * Clear the loader
        */
-      public function Clear() : FluentLoader
+      public function Clear(): FluentLoader
       {
             Loader::Clear();
             return $this;
@@ -78,21 +78,22 @@ final class FluentLoader
       /**
        * Set log activation
        */
-      public function SetLogActivation(bool $active) : FluentLoader
+      public function SetLogActivation(bool $active): FluentLoader
       {
             Loader::SetLogActivation($active);
             return $this;
       }
 
-      private function getFilter(int $objectType) : int
+      private function getFilter(int $objectType): int
       {
             if ($this->objectTypeFilter == PartialEnumerations_ObjectType::None)
                   return $objectType;
 
             if (($objectType == PartialEnumerations_ObjectType::All)
-                  && ($this->objectTypeFilter != PartialEnumerations_ObjectType::None))
+                  && ($this->objectTypeFilter != PartialEnumerations_ObjectType::None)
+            )
                   return $this->objectTypeFilter;
-            
+
             return $objectType;
       }
 
@@ -105,14 +106,22 @@ final class FluentLoader
        * @loadDelayedElements : Specify if the loader load partial class that specified as delayedLoading at True - Boolean - default value is False
        * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
        */
-      public function Load(mixed $included, int $maxTemptatives = 1,
-            bool $php_as_partial = false, mixed $ignored = array(),
+      public function Load(
+            mixed $included,
+            int $maxTemptatives = 1,
+            bool $php_as_partial = false,
+            mixed $ignored = array(),
             bool $loadDelayedElements = false,
-            int $objectType = PartialEnumerations_ObjectType::All) : FluentLoader
-      {
-            Loader::Load($included, $maxTemptatives, $php_as_partial,
-                  $ignored, $loadDelayedElements,
-                  $this->getFilter($objectType));
+            int $objectType = PartialEnumerations_ObjectType::All
+      ): FluentLoader {
+            Loader::Load(
+                  $included,
+                  $maxTemptatives,
+                  $php_as_partial,
+                  $ignored,
+                  $loadDelayedElements,
+                  $this->getFilter($objectType)
+            );
             return $this;
       }
 
@@ -123,11 +132,15 @@ final class FluentLoader
        * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
        */
       public function LoadStoredPaths(
-            int $maxTemptatives = 1, bool $php_as_partial = false,
-            int $objectType = PartialEnumerations_ObjectType::All) : FluentLoader
-      {
-            Loader::LoadStoredPaths($maxTemptatives, $php_as_partial,
-                  $this->getFilter($objectType));
+            int $maxTemptatives = 1,
+            bool $php_as_partial = false,
+            int $objectType = PartialEnumerations_ObjectType::All
+      ): FluentLoader {
+            Loader::LoadStoredPaths(
+                  $maxTemptatives,
+                  $php_as_partial,
+                  $this->getFilter($objectType)
+            );
             return $this;
       }
 
@@ -136,11 +149,14 @@ final class FluentLoader
        * @php_as_partial : Specify if partial class is in php files with php extension - Boolean - default value is False
        * @objectType : Specify object who the loader must load - Default value is PartialEnumerations_ObjectType::All
        */
-      public function LoadDelayedElements(bool $php_as_partial = false,
-            int $objectType = PartialEnumerations_ObjectType::All) : FluentLoader
-      {
-            Loader::LoadDelayedElements($php_as_partial,
-                  $this->getFilter($objectType));
+      public function LoadDelayedElements(
+            bool $php_as_partial = false,
+            int $objectType = PartialEnumerations_ObjectType::All
+      ): FluentLoader {
+            Loader::LoadDelayedElements(
+                  $php_as_partial,
+                  $this->getFilter($objectType)
+            );
             return $this;
       }
 }

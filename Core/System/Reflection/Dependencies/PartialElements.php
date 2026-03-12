@@ -5,7 +5,7 @@
  */
 
 /**
- * Copyright since 2024 Firstruner and Contributors
+ * Copyright 2024-2026 Firstruner and Contributors
  * Firstruner is an Registered Trademark & Property of Christophe BOULAS
  *
  * NOTICE OF LICENSE
@@ -21,9 +21,9 @@
  * Please refer to https://firstruner.fr/ or contact Firstruner for more information.
  *
  * @author    Firstruner and Contributors <contact@firstruner.fr>
- * @copyright Since 2024 Firstruner and Contributors
+ * @copyright 2024-2026 Firstruner and Contributors
  * @license   https://wikipedia.org/wiki/Freemium Freemium License
- * @version 2.0.0
+ * @version 3.3.0
  */
 
 namespace System\Reflection\Dependencies;
@@ -59,7 +59,8 @@ final class PartialElements
             $this->Content = $this->extractContents($content);
             $this->DelayedLoading = (preg_match(
                   $this::delayed_Pattern,
-                  $content) > 0);
+                  $content
+            ) > 0);
 
             $this->detectClassHeaders(
                   substr(
@@ -80,7 +81,7 @@ final class PartialElements
             if (strpos($headers, PartialConstants::Tag_Namespace) == 0)
                   return "";
 
-            $headers = str_replace("<?php","", $headers);
+            $headers = str_replace("<?php", "", $headers);
 
             $namespaceStart = strpos($headers, PartialConstants::Tag_Namespace)
                   + strlen(PartialConstants::Tag_Namespace);
@@ -134,13 +135,13 @@ final class PartialElements
       private function getElementPattern(): string
       {
             switch ($this->objectType) {
-                  case PartialEnumerations_ObjectType::_Class;
+                  case PartialEnumerations_ObjectType::_Class:
                         return $this::class_Pattern;
-                  case PartialEnumerations_ObjectType::_Interface;
+                  case PartialEnumerations_ObjectType::_Interface:
                         return $this::interface_Pattern;
-                  case PartialEnumerations_ObjectType::_Trait;
+                  case PartialEnumerations_ObjectType::_Trait:
                         return $this::trait_Pattern;
-                  case PartialEnumerations_ObjectType::_Enumeration;
+                  case PartialEnumerations_ObjectType::_Enumeration:
                         return $this::enum_Pattern;
                   default:
                         return $this::empty_Pattern;
@@ -181,12 +182,12 @@ final class PartialElements
             return "";
       }
 
-      public function GetCommonName() : string
+      public function GetCommonName(): string
       {
             return $this->ElementName;
       }
 
-      public function GetFullName() : string
+      public function GetFullName(): string
       {
             return $this->Namespace . "\\" . $this->ElementName;
       }

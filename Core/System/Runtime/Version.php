@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright since 2024 Firstruner and Contributors
+ * Copyright 2024-2026 Firstruner and Contributors
  * Firstruner is an Registered Trademark & Property of Christophe BOULAS
  *
  * NOTICE OF LICENSE
@@ -17,9 +17,9 @@
  * Please refer to https://firstruner.fr/ or contact Firstruner for more information.
  *
  * @author    Firstruner and Contributors <contact@firstruner.fr>
- * @copyright Since 2024 Firstruner and Contributors
+ * @copyright 2024-2026 Firstruner and Contributors
  * @license   Proprietary
- * @version 2.0.0
+ * @version 3.3.0
  */
 
 namespace System\Runtime;
@@ -56,23 +56,23 @@ final class Version
             for ($i = 0; $i < count($version); $i++) {
                   switch ($i) {
                         case 0:
-                              $this->Major = $version[$i];
+                              $this->Major = (int)$version[$i];
                               if (count($version) == 1) continue 2;
                               break;
                         case 1:
-                              $this->Minor = $version[$i];
+                              $this->Minor = (int)$version[$i];
                               if (count($version) == 2) continue 2;
                               break;
                         case 2:
-                              $this->Patch = $version[$i];
+                              $this->Patch = (string)$version[$i];
                               if (count($version) == 3) continue 2;
                               break;
                         case 3:
-                              $this->Build = $version[$i];
+                              $this->Build = (string)$version[$i];
                               if (count($version) == 4) continue 2;
                               break;
                         case 4:
-                              $this->Tags = $version[$i];
+                              $this->Tags = explode(",", $version[$i]);
                               if (count($version) == 5) continue 2;
                               break;
                   }
@@ -91,6 +91,48 @@ final class Version
             $this->Patch = $_patch;
             $this->Build = $_build;
             $this->Tags = $_tags;
+      }
+
+      public static function Compare(Version|string $v1, Version|string $v2): int
+      {
+            if (gettype($v1) == _string::ClassName) $v1 = new Version($v1);
+            if (gettype($v2) == _string::ClassName) $v2 = new Version($v2);
+
+            if (!($v1 instanceof Version) || !($v2 instanceof Version))
+                  throw new \InvalidArgumentException("Compare attend deux Version ou deux chaînes.");
+
+            if ($v1->Major !== $v2->Major) return ($v1->Major < $v2->Major) ? -1 : 1;
+            if ($v1->Minor !== $v2->Minor) return ($v1->Minor < $v2->Minor) ? -1 : 1;
+
+            $p1 = ($v1->Patch !== _string::EmptyString) ? $v1->Patch : "0";
+            $p2 = ($v2->Patch !== _string::EmptyString) ? $v2->Patch : "0";
+
+            if (ctype_digit($p1) && ctype_digit($p2)) {
+                  $ip1 = (int)$p1;
+                  $ip2 = (int)$p2;
+                  if ($ip1 !== $ip2) return ($ip1 < $ip2) ? -1 : 1;
+            } else {
+                  if ($p1 !== $p2) return ($p1 < $p2) ? -1 : 1;
+            }
+
+            $b1 = ($v1->Build !== _string::EmptyString) ? $v1->Build : "0";
+            $b2 = ($v2->Build !== _string::EmptyString) ? $v2->Build : "0";
+
+            if (ctype_digit($b1) && ctype_digit($b2)) {
+                  $ib1 = (int)$b1;
+                  $ib2 = (int)$b2;
+                  if ($ib1 !== $ib2) return ($ib1 < $ib2) ? -1 : 1;
+            } else {
+                  if ($b1 !== $b2) return ($b1 < $b2) ? -1 : 1;
+            }
+
+            return 0;
+      }
+
+      public function IsObsolete(Version|string $latestVersion): bool
+      {
+            if (gettype($latestVersion) == _string::ClassName) $latestVersion = new Version($latestVersion);
+            return self::Compare($this, $latestVersion) < 0;
       }
 
       function __toString()
