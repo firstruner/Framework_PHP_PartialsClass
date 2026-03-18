@@ -31,6 +31,7 @@ namespace System\Reflection\Dependencies;
 use Exception;
 use Iterator;
 use System\Environment\PHP;
+use System\Reflection\DelegateValidator;
 
 final class PartialElementsCollection implements Iterator
 {
@@ -305,6 +306,11 @@ final class PartialElementsCollection implements Iterator
                         echo "Contenu :" . PHP_EOL . $finalClass;
 
                   eval($finalClass);
+
+                  if ($ElementType === PartialEnumerations_ObjectType::_Class && class_exists(DelegateValidator::class)) {
+                        DelegateValidator::Validate($OOPFullName);
+                  }
+
                   return true;
             } catch (\Error $err) {
                   echo new \Exception(

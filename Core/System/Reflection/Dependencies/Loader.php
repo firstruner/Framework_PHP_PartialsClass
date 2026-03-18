@@ -32,6 +32,7 @@ class ClassAlreadyExistsException extends \Exception {}
 
 use System\Default\_array;
 use System\Default\_string;
+use System\Reflection\DelegateValidator;
 
 function InitializePartialLoader(): bool
 {
@@ -448,8 +449,9 @@ final class Loader
       //       return false;
       // }
 
-      /*public static function getFullClassNameFromFile($filePath) {
-            $phpCode = file_get_contents($filePath);
+      public static function getFullClassNameFromFile($filePath): ?string {
+            $phpCode = @file_get_contents($filePath);
+            if ($phpCode === false) return null;
 
             // Rechercher le namespace avec une expression régulière
             $namespace = '';
@@ -462,10 +464,10 @@ final class Loader
                   return $namespace . $classMatches[1];
             }
 
-            throw new Exception("Aucune classe trouvée dans le fichier $filePath.");
+            return null;
       }
 
-      public static function requireClassFile($filePath) {
+      /*public static function requireClassFile($filePath) {
             try {
                   // Obtenir le nom complet de la classe (namespace + nom de classe) à partir du fichier
                   $fullClassName = Loader::getFullClassNameFromFile($filePath);
@@ -518,6 +520,10 @@ final class Loader
                               }
                         }
 
+                        $className = self::getFullClassNameFromFile($path);
+                        if ($className && class_exists($className, false) && class_exists(DelegateValidator::class)) {
+                              DelegateValidator::Validate($className);
+                        }
 
                         //Loader::requireClassFile($path);
                   } catch (\Throwable $err) {
